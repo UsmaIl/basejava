@@ -3,26 +3,34 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    private int iterator = 0;
 
     void clear() {
         for (int i = 0; i < storage.length; i++) {
             storage[i] = null;
+            iterator = 0;
         }
     }
 
     void save(Resume r) {
-        if (r == null) throw new NullPointerException();
+        if (r == null) {
+            System.out.println("В метод save класса ArrayStorage передан null!!!");
+            return;
+        }
         
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = r;
+                iterator++;
                 break;
             }
         }
     }
 
     Resume get(String uuid) {
-        if (uuid == null) throw new NullPointerException();
+        if (uuid == null) {
+            System.out.println("В метод get класса ArrayStorage передан null!!!");
+        }
 
         for (Resume r : storage) {
             if (r == null) break;
@@ -36,13 +44,17 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        if (uuid == null) throw new NullPointerException();
+        if (uuid == null) {
+            System.out.println("В метод delete класса ArrayStorage передан null!!!");
+            return;
+        }
 
         for (int i = 0, j = 0; j < storage.length; i++, j++) {
             if (storage[i] == null) break;
 
             if (uuid.equals(storage[i].toString())) {
                 j++;
+                iterator--;
             }
             storage[i] = storage[j];
         }
@@ -52,15 +64,6 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int iterator = 0;
-
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) {
-                break;
-            }
-            iterator++;
-        }
-
         Resume[] tempArray = new Resume[iterator];
 
         for (int i = 0; i < tempArray.length; i++) {
@@ -71,15 +74,6 @@ public class ArrayStorage {
     }
 
     int size() {
-        int iterator = 0;
-
-        for (Resume r : storage) {
-            if (r == null) {
-                break;
-            }
-            iterator++;
-        }
-
         return iterator;
     }
 }
