@@ -14,6 +14,7 @@ public class ArrayStorage {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = r;
+                break;
             }
         }
     }
@@ -33,7 +34,19 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        
+        if (uuid == null) throw new NullPointerException();
+
+        Resume[] tempArray = new Resume[storage.length];
+
+        for (int i = 0, j = 0; i < storage.length && j < storage.length; i++) {
+
+            if (uuid.equals(storage[i].toString())) {
+                j++;
+                //continue;
+            }
+
+            storage[i] = storage[j++];
+        }
     }
 
     /**
