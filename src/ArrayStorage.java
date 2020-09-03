@@ -7,10 +7,13 @@ public class ArrayStorage {
     Resume[] storage = new Resume[10000];
 
     void clear() {
-        Arrays.fill(storage, null);
+        for (int i = 0; i < storage.length; i++) {
+            storage[i] = null;
+        }
     }
 
     void save(Resume r) {
+        storage[]
     }
 
     Resume get(String uuid) {
