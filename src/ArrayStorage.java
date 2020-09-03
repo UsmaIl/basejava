@@ -36,13 +36,12 @@ public class ArrayStorage {
     void delete(String uuid) {
         if (uuid == null) throw new NullPointerException();
 
-        Resume[] tempArray = new Resume[storage.length];
-
         for (int i = 0, j = 0; i < storage.length && j < storage.length; i++) {
+
+            if (storage[i] == null) break;
 
             if (uuid.equals(storage[i].toString())) {
                 j++;
-                //continue;
             }
 
             storage[i] = storage[j++];
@@ -53,7 +52,22 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return new Resume[0];
+        int iterator = 0;
+
+        for (int i = 0; i < storage.length; i++) {
+            if (storage[i] == null) {
+                break;
+            }
+            iterator++;
+        }
+
+        Resume[] tempArray = new Resume[iterator];
+
+        for (int i = 0; i < tempArray.length; i++) {
+            tempArray[i] = storage[i];
+        }
+
+        return tempArray;
     }
 
     int size() {
