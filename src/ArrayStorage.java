@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 /**
  * Array based storage for Resumes
  */
@@ -21,10 +19,21 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
+        if (uuid == null) throw new NullPointerException();
+
+        for (Resume r : storage) {
+            if (r == null) break;
+
+            if (uuid.equals(r.toString())) {
+                return r;
+            }
+        }
+
         return null;
     }
 
     void delete(String uuid) {
+        
     }
 
     /**
