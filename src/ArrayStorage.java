@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 /**
  * Array based storage for Resumes
  */
@@ -12,15 +14,15 @@ public class ArrayStorage {
         }
     }
 
-    void save(Resume r) {
-        if (r == null) {
+    void save(Resume resume) {
+        if (resume == null) {
             System.out.println("В метод save класса ArrayStorage передан null!!!");
             return;
         }
         
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
-                storage[i] = r;
+                storage[i] = resume;
                 iterator++;
                 break;
             }
@@ -35,7 +37,7 @@ public class ArrayStorage {
         for (Resume r : storage) {
             if (r == null) break;
 
-            if (uuid.equals(r.toString())) {
+            if (Objects.equals(uuid, r.toString())) {
                 return r;
             }
         }
@@ -64,13 +66,13 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        Resume[] tempArray = new Resume[iterator];
+        Resume[] resumes = new Resume[iterator];
 
-        for (int i = 0; i < tempArray.length; i++) {
-            tempArray[i] = storage[i];
+        for (int i = 0; i < resumes.length; i++) {
+            resumes[i] = storage[i];
         }
 
-        return tempArray;
+        return resumes;
     }
 
     int size() {
