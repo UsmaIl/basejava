@@ -36,15 +36,13 @@ public class ArrayStorage {
     void delete(String uuid) {
         if (uuid == null) throw new NullPointerException();
 
-        for (int i = 0, j = 0; i < storage.length && j < storage.length; i++) {
-
+        for (int i = 0, j = 0; j < storage.length; i++, j++) {
             if (storage[i] == null) break;
 
             if (uuid.equals(storage[i].toString())) {
                 j++;
             }
-
-            storage[i] = storage[j++];
+            storage[i] = storage[j];
         }
     }
 
@@ -71,6 +69,15 @@ public class ArrayStorage {
     }
 
     int size() {
-        return 0;
+        int iterator = 0;
+
+        for (Resume r : storage) {
+            if (r == null) {
+                break;
+            }
+            iterator++;
+        }
+
+        return iterator;
     }
 }
