@@ -8,7 +8,7 @@ public class ArrayStorage {
     private int iterator = 0;
 
     void clear() {
-        for (int i = 0; i < storage.length; i++) {
+        for (int i = 0; i < iterator; i++) {
             storage[i] = null;
         }
         iterator = 0;
@@ -19,14 +19,7 @@ public class ArrayStorage {
             System.out.println("В метод save класса ArrayStorage передан null!!!");
             return;
         }
-        
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) {
-                storage[i] = resume;
-                iterator++;
-                break;
-            }
-        }
+        storage[iterator++] = resume;
     }
 
     Resume get(String uuid) {
@@ -34,11 +27,9 @@ public class ArrayStorage {
             System.out.println("В метод get класса ArrayStorage передан null!!!");
         }
 
-        for (Resume r : storage) {
-            if (r == null) break;
-
-            if (Objects.equals(uuid, r.toString())) {
-                return r;
+        for (int i = 0; i < iterator; i++) {
+            if (Objects.equals(uuid, storage[i].toString())) {
+                return storage[i];
             }
         }
 
@@ -51,9 +42,7 @@ public class ArrayStorage {
             return;
         }
 
-        for (int i = 0, j = 0; j < storage.length; i++, j++) {
-            if (storage[i] == null) break;
-
+        for (int i = 0, j = 0; i < iterator; i++, j++) {
             if (uuid.equals(storage[i].toString())) {
                 j++;
                 iterator--;
@@ -68,7 +57,7 @@ public class ArrayStorage {
     Resume[] getAll() {
         Resume[] resumes = new Resume[iterator];
 
-        for (int i = 0; i < resumes.length; i++) {
+        for (int i = 0; i < iterator; i++) {
             resumes[i] = storage[i];
         }
 
