@@ -42,12 +42,11 @@ public class ArrayStorage {
             return;
         }
 
-        for (int i = 0, j = 0; i < iterator; i++, j++) {
+        for (int i = 0; i < iterator; i++) {
             if (uuid.equals(storage[i].toString())) {
-                j++;
                 iterator--;
             }
-            storage[i] = storage[j];
+            storage[i] = storage[i + 1];
         }
     }
 
