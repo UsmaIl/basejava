@@ -22,10 +22,11 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if (iterator > storage.length) {
+        if (iterator == storage.length) {
             System.out.println("Ошибка! Переполнение ArrayStorage");
             return;
         }
+
         if (resume == null) {
             System.out.println("В метод save класса ArrayStorage передан null!!!");
             return;
@@ -56,6 +57,20 @@ public class ArrayStorage {
         }
 
         return null;
+    }
+
+    public void update(Resume resume) {
+        if (resume == null) {
+            System.out.println("В метод update класса ArrayStorage передан null!!!");
+            return;
+        }
+
+        if (Arrays.asList(Arrays.copyOfRange(storage, 0, iterator)).contains(resume)) {
+            System.out.println("Ошибка! Переданное резюме уже существует.");
+            return;
+        }
+
+        storage[iterator - 1] = resume;
     }
 
     public void delete(String uuid) {
