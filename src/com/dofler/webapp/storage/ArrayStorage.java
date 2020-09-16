@@ -17,9 +17,22 @@ public class ArrayStorage {
         iterator = 0;
     }
 
+    private boolean contain(String uuid) {
+        return Arrays.stream(storage, 0, iterator).noneMatch(id -> uuid.equals(id.getUuid()));
+    }
+
     public void save(Resume resume) {
+        if (iterator > storage.length) {
+            System.out.println("Ошибка! Переполнение ArrayStorage");
+            return;
+        }
         if (resume == null) {
-            System.out.println("В метод save класса com.dofler.webapp.storage.ArrayStorage передан null!!!");
+            System.out.println("В метод save класса ArrayStorage передан null!!!");
+            return;
+        }
+
+        if (Arrays.asList(Arrays.copyOfRange(storage, 0, iterator)).contains(resume)) {
+            System.out.println("Ошибка! Переданное резюме уже существует.");
             return;
         }
         storage[iterator++] = resume;
@@ -27,7 +40,13 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         if (uuid == null) {
-            System.out.println("В метод get класса com.dofler.webapp.storage.ArrayStorage передан null!!!");
+            System.out.println("В метод get класса ArrayStorage передан null!!!");
+            return null;
+        }
+
+        if (this.contain(uuid)) {
+            System.out.println("Ошибка! Резюме с таким uuid не существует!");
+            return null;
         }
 
         for (int i = 0; i < iterator; i++) {
@@ -41,16 +60,21 @@ public class ArrayStorage {
 
     public void delete(String uuid) {
         if (uuid == null) {
-            System.out.println("В метод delete класса com.dofler.webapp.storage.ArrayStorage передан null!!!");
+            System.out.println("В метод delete класса ArrayStorage передан null!!!");
             return;
         }
 
-        for (int i = 0, j = 0; i < iterator; i++, j++) {
-            if (uuid.equals(storage[i].toString())) {
-                j++;
+        if (this.contain(uuid)) {
+            System.out.println("Ошибка! Резюме с таким uuid не существует!");
+            return;
+        }
+
+        for (int i = 0; i < iterator; i++) {
+            if (uuid.equals(storage[i].getUuid())) {
+                storage[i] = storage[iterator - 1];
+                storage[iterator - 1] = null;
                 iterator--;
             }
-            storage[i] = storage[j];
         }
     }
 
@@ -64,4 +88,5 @@ public class ArrayStorage {
     public int size() {
         return iterator;
     }
+
 }
