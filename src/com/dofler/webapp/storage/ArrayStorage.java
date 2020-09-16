@@ -2,6 +2,7 @@ package com.dofler.webapp.storage;
 
 import com.dofler.webapp.model.Resume;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -12,9 +13,7 @@ public class ArrayStorage {
     private int iterator = 0;
 
     public void clear() {
-        for (int i = 0; i < iterator; i++) {
-            storage[i] = null;
-        }
+        Arrays.fill(storage, 0, iterator, null);
         iterator = 0;
     }
 
@@ -59,13 +58,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        Resume[] resumes = new Resume[iterator];
-
-        for (int i = 0; i < iterator; i++) {
-            resumes[i] = storage[i];
-        }
-
-        return resumes;
+        return Arrays.copyOf(storage, iterator);
     }
 
     public int size() {
