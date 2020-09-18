@@ -3,7 +3,7 @@ package com.dofler.webapp.storage;
 import com.dofler.webapp.model.Resume;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.stream.IntStream;
 
 /**
  * Array based storage for Resumes
@@ -17,25 +17,31 @@ public class ArrayStorage {
         iterator = 0;
     }
 
-    private boolean contain(String uuid) {
-        return Arrays.stream(storage, 0, iterator).noneMatch(id -> uuid.equals(id.getUuid()));
+    private int getIndex(String uuid) {
+        return IntStream.range(0, iterator)
+                .filter(i -> uuid.equals(storage[i].getUuid()))
+                .findFirst()
+                .orElse(-1);
     }
 
     public void save(Resume resume) {
-        if (iterator == storage.length) {
-            System.out.println("Ошибка! Переполнение ArrayStorage");
-            return;
-        }
 
         if (resume == null) {
             System.out.println("В метод save класса ArrayStorage передан null!!!");
             return;
         }
 
-        if (Arrays.asList(Arrays.copyOfRange(storage, 0, iterator)).contains(resume)) {
+        int index = getIndex(resume.getUuid());
+        if (index != -1) {
             System.out.println("Ошибка! Переданное резюме уже существует.");
             return;
         }
+
+        if (iterator == storage.length) {
+            System.out.println("Ошибка! Переполнение ArrayStorage");
+            return;
+        }
+
         storage[iterator++] = resume;
     }
 
@@ -45,18 +51,13 @@ public class ArrayStorage {
             return null;
         }
 
-        if (this.contain(uuid)) {
+        int index = getIndex(uuid);
+        if (index == -1) {
             System.out.println("Ошибка! Резюме с таким uuid не существует!");
             return null;
         }
 
-        for (int i = 0; i < iterator; i++) {
-            if (Objects.equals(uuid, storage[i].toString())) {
-                return storage[i];
-            }
-        }
-
-        return null;
+        return storage[index];
     }
 
     public void update(Resume resume) {
@@ -65,12 +66,13 @@ public class ArrayStorage {
             return;
         }
 
-        if (Arrays.asList(Arrays.copyOfRange(storage, 0, iterator)).contains(resume)) {
-            System.out.println("Ошибка! Переданное резюме уже существует.");
+        int index = getIndex(resume.getUuid());
+        if (index == -1) {
+            System.out.println("Ошибка! Резюме с таким uuid не существует!");
             return;
         }
 
-        storage[iterator - 1] = resume;
+        storage[index] = resume;
     }
 
     public void delete(String uuid) {
@@ -79,7 +81,7 @@ public class ArrayStorage {
             return;
         }
 
-        if (this.contain(uuid)) {
+        if (getIndex(uuid) == -1) {
             System.out.println("Ошибка! Резюме с таким uuid не существует!");
             return;
         }
