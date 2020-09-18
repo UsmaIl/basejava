@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    private final Resume[] storage = new Resume[10000];
+    private final Resume[] storage = new Resume[10_000];
     private int iterator = 0;
 
     public void clear() {
@@ -17,23 +17,16 @@ public class ArrayStorage {
         iterator = 0;
     }
 
-    private int getIndex(String uuid) {
-        return IntStream.range(0, iterator)
-                .filter(i -> uuid.equals(storage[i].getUuid()))
-                .findFirst()
-                .orElse(-1);
-    }
-
     public void save(Resume resume) {
-
         if (resume == null) {
             System.out.println("В метод save класса ArrayStorage передан null!!!");
             return;
         }
 
-        int index = getIndex(resume.getUuid());
+        String uuid = resume.getUuid();
+        int index = getIndex(uuid);
         if (index != -1) {
-            System.out.println("Ошибка! Переданное резюме уже существует.");
+            System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" не существует!");
             return;
         }
 
@@ -53,7 +46,7 @@ public class ArrayStorage {
 
         int index = getIndex(uuid);
         if (index == -1) {
-            System.out.println("Ошибка! Резюме с таким uuid не существует!");
+            System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" не существует!");
             return null;
         }
 
@@ -66,9 +59,10 @@ public class ArrayStorage {
             return;
         }
 
-        int index = getIndex(resume.getUuid());
+        String uuid = resume.getUuid();
+        int index = getIndex(uuid);
         if (index == -1) {
-            System.out.println("Ошибка! Резюме с таким uuid не существует!");
+            System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" не существует!");
             return;
         }
 
@@ -81,18 +75,15 @@ public class ArrayStorage {
             return;
         }
 
-        if (getIndex(uuid) == -1) {
-            System.out.println("Ошибка! Резюме с таким uuid не существует!");
+        int index = getIndex(uuid);
+        if (index == -1) {
+            System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" не существует!");
             return;
         }
 
-        for (int i = 0; i < iterator; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
-                storage[i] = storage[iterator - 1];
-                storage[iterator - 1] = null;
-                iterator--;
-            }
-        }
+        storage[index] = storage[iterator - 1];
+        storage[iterator - 1] = null;
+        iterator--;
     }
 
     /**
@@ -106,4 +97,10 @@ public class ArrayStorage {
         return iterator;
     }
 
+    private int getIndex(String uuid) {
+        return IntStream.range(0, iterator)
+                .filter(i -> uuid.equals(storage[i].getUuid()))
+                .findFirst()
+                .orElse(-1);
+    }
 }
