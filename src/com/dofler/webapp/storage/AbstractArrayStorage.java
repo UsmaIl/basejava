@@ -91,10 +91,10 @@ abstract class AbstractArrayStorage implements Storage{
         storage[index] = resume;
     }
 
-    public abstract int getIndex(String uuid);
+    abstract int getIndex(String uuid);
 
-    public abstract void insertElement(Resume r, int index);
+    abstract void insertElement(Resume r, int index);
 
-    public abstract void deleteElement(int index);
+    abstract void deleteElement(int index);
 
 }
