@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    protected int getIndex(String uuid) {
+    public int getIndex(String uuid) {
         return IntStream.range(0, iterator)
                 .filter(i -> uuid.equals(storage[i].getUuid()))
                 .findFirst()
@@ -19,7 +19,13 @@ public class ArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void insertElement(Resume r, int index) {
+    public void insertElement(Resume r, int index) {
         storage[iterator] = r;
+    }
+
+    @Override
+    public void deleteElement(int index) {
+        storage[index] = storage[iterator - 1];
+        storage[iterator - 1] = null;
     }
 }
