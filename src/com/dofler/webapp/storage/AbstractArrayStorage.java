@@ -46,7 +46,7 @@ abstract class AbstractArrayStorage implements Storage{
 
         String uuid = resume.getUuid();
         int index = getIndex(uuid);
-        if (index >= 0) {
+        if (index > -1) {
             System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" уже существует!");
             return;
         }
@@ -67,11 +67,12 @@ abstract class AbstractArrayStorage implements Storage{
         }
 
         int index = getIndex(uuid);
-        if (index == -1) {
+        if (index < 0) {
             System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" не существует!");
             return;
         }
         deleteElement(index);
+        storage[iterator - 1] = null;
         iterator--;
     }
 
@@ -83,7 +84,7 @@ abstract class AbstractArrayStorage implements Storage{
 
         String uuid = resume.getUuid();
         int index = getIndex(uuid);
-        if (index == -1) {
+        if (index < 0) {
             System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" не существует!");
             return;
         }

@@ -64,7 +64,7 @@ public class MainTestArrayStorage {
         System.out.println("Get r5: " + SORTED_ARRAY_STORAGE.get(r5.getUuid()));
         System.out.println("Size: " + SORTED_ARRAY_STORAGE.size());
 
-        System.out.println("Get dummy: " + SORTED_ARRAY_STORAGE.get("dummy"));
+        System.out.println("Get dummy: " + SORTED_ARRAY_STORAGE.get("uuid10"));
         System.out.println("Get uuid4: " + SORTED_ARRAY_STORAGE.get("uuid4"));
 
         printAllSortedArrayStorage();
