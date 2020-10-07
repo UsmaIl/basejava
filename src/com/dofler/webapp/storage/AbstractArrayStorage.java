@@ -1,14 +1,18 @@
 package com.dofler.webapp.storage;
 
+import com.dofler.webapp.exception.ExistStorageException;
+import com.dofler.webapp.exception.NotExistStorageException;
+import com.dofler.webapp.exception.StorageException;
 import com.dofler.webapp.model.Resume;
 
 import java.util.Arrays;
 
-abstract class AbstractArrayStorage implements Storage{
+abstract class AbstractArrayStorage implements Storage {
     private static final int STORAGE_LIMIT = 10_000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int iterator = 0;
+
 
     public final int size() {
         return iterator;
@@ -31,8 +35,7 @@ abstract class AbstractArrayStorage implements Storage{
 
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" не существует!");
-            return null;
+            throw new NotExistStorageException(uuid);
         }
 
         return storage[index];
@@ -47,13 +50,11 @@ abstract class AbstractArrayStorage implements Storage{
         String uuid = resume.getUuid();
         int index = getIndex(uuid);
         if (index > -1) {
-            System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" уже существует!");
-            return;
+            throw new ExistStorageException(uuid);
         }
 
         if (iterator == storage.length) {
-            System.out.println("Ошибка! Переполнение Storage");
-            return;
+            throw new StorageException("Storage overflow", uuid);
         }
 
         insertElement(resume, index);
@@ -68,8 +69,7 @@ abstract class AbstractArrayStorage implements Storage{
 
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" не существует!");
-            return;
+            throw new NotExistStorageException(uuid);
         }
         deleteElement(index);
         storage[iterator - 1] = null;
@@ -85,8 +85,7 @@ abstract class AbstractArrayStorage implements Storage{
         String uuid = resume.getUuid();
         int index = getIndex(uuid);
         if (index < 0) {
-            System.out.println("Ошибка! Резюме с таким uuid: \"" + uuid + "\" не существует!");
-            return;
+            throw new NotExistStorageException(uuid);
         }
 
         storage[index] = resume;
