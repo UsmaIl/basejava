@@ -7,7 +7,7 @@ import com.dofler.webapp.model.Resume;
 
 import java.util.Arrays;
 
-abstract class AbstractArrayStorage implements Storage {
+    abstract class AbstractArrayStorage extends AbstractStorage  {
     private static final int STORAGE_LIMIT = 10_000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -91,10 +91,10 @@ abstract class AbstractArrayStorage implements Storage {
         storage[index] = resume;
     }
 
-    abstract int getIndex(String uuid);
 
     abstract void insertElement(Resume r, int index);
 
     abstract void deleteElement(int index);
 
+    abstract int getIndex(String uuid);
 }
