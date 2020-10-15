@@ -5,8 +5,13 @@ import com.dofler.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage implements Storage {
+public class ListStorage extends AbstractStorage {
     private final List<Resume> list = new ArrayList<>();
+
+    @Override
+    public int size() {
+        return list.size();
+    }
 
     @Override
     public void clear() {
@@ -14,23 +19,28 @@ public class ListStorage implements Storage {
     }
 
     @Override
-    public void update(Resume resume) {
-        list.set(getIndex(resume.getUuid()), resume);
+    int getIndex(String uuid) {
+        return list.indexOf(new Resume(uuid));
     }
 
     @Override
-    public void save(Resume resume) {
+    boolean isExist(int index) {
+        return index >= 0;
+    }
+
+    @Override
+    void save(Resume resume, int index) {
         list.add(resume);
     }
 
     @Override
-    public void delete(String uuid) {
-        list.remove(getIndex(uuid));
+    void delete(int index) {
+        list.remove(index);
     }
 
     @Override
-    public Resume get(String uuid) {
-        return list.get(getIndex(uuid));
+    Resume get(int index) {
+        return list.get(index);
     }
 
     @Override
@@ -39,11 +49,7 @@ public class ListStorage implements Storage {
     }
 
     @Override
-    public int size() {
-        return list.size();
-    }
-
-    private int getIndex(String uuid) {
-        return list.indexOf(new Resume(uuid));
+    void update(Resume resume, int index) {
+        list.set(index, resume);
     }
 }

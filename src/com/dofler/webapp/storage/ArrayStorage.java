@@ -9,7 +9,6 @@ import java.util.stream.IntStream;
  * Array based storage for Resumes
  */
 public class ArrayStorage extends AbstractArrayStorage {
-
     @Override
     int getIndex(String uuid) {
         return IntStream.range(0, iterator)
