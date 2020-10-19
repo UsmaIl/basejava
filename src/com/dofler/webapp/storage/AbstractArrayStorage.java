@@ -23,29 +23,29 @@ abstract class AbstractArrayStorage extends AbstractStorage  {
     }
 
     @Override
-    public void save(Resume resume, int index) {
+    public void save(Resume resume, Object index) {
         if (iterator == storage.length) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
-        insertElement(resume, index);
+        insertElement(resume, (int) index);
         iterator++;
     }
 
     @Override
-    public void delete(int index) {
-        deleteElement(index);
+    public void delete(Object index) {
+        deleteElement((int) index);
         storage[iterator - 1] = null;
         iterator--;
     }
 
     @Override
-    public void update(Resume resume, int index) {
-        storage[index] = resume;
+    public void update(Resume resume, Object index) {
+        storage[(int) index] = resume;
     }
 
     @Override
-    public Resume get(int index) {
-        return storage[index];
+    public Resume get(Object index) {
+        return storage[(int) index];
     }
 
     @Override
@@ -54,8 +54,8 @@ abstract class AbstractArrayStorage extends AbstractStorage  {
     }
 
     @Override
-    boolean isExist(int index) {
-        return index >= 0;
+    boolean isExist(Object index) {
+        return (int) index >= 0;
     }
 
 

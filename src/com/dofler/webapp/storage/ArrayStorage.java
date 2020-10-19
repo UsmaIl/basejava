@@ -3,6 +3,7 @@ package com.dofler.webapp.storage;
 
 import com.dofler.webapp.model.Resume;
 
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 /**
@@ -10,9 +11,9 @@ import java.util.stream.IntStream;
  */
 public class ArrayStorage extends AbstractArrayStorage {
     @Override
-    int getIndex(String uuid) {
+    Object getSearchKey(String uuid) {
         return IntStream.range(0, iterator)
-                .filter(i -> uuid.equals(storage[i].getUuid()))
+                .filter(i -> Objects.equals(uuid, storage[i].getUuid()))
                 .findFirst()
                 .orElse(-1);
     }

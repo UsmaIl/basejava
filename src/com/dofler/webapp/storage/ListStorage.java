@@ -19,28 +19,28 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    int getIndex(String uuid) {
+    Object getSearchKey(String uuid) {
         return list.indexOf(new Resume(uuid));
     }
 
     @Override
-    boolean isExist(int index) {
-        return index >= 0;
+    boolean isExist(Object index) {
+        return (int) index >= 0;
     }
 
     @Override
-    void save(Resume resume, int index) {
-        list.add(resume);
+    void save(Resume r, Object index) {
+        list.add(r);
     }
 
     @Override
-    void delete(int index) {
-        list.remove(index);
+    void delete(Object index) {
+        list.remove((int) index);
     }
 
     @Override
-    Resume get(int index) {
-        return list.get(index);
+    Resume get(Object index) {
+        return list.get((int) index);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    void update(Resume resume, int index) {
-        list.set(index, resume);
+    void update(Resume r, Object index) {
+        list.set((int) index, r);
     }
 }

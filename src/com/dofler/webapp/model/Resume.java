@@ -19,6 +19,7 @@ public class Resume implements Comparable<Resume> {
         this.uuid = uuid;
     }
 
+
     public String getUuid() {
         return uuid;
     }

@@ -5,56 +5,53 @@ import com.dofler.webapp.exception.NotExistStorageException;
 import com.dofler.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
+    abstract Object getSearchKey(String uuid);
 
-    abstract int getIndex(String uuid);
+    abstract boolean isExist(Object searchKey);
 
-    abstract boolean isExist(int index);
+    abstract void save(Resume r, Object searchKey);
 
-    abstract void save(Resume resume, int index);
+    abstract void delete(Object searchKey);
 
-    abstract void delete(int index);
+    abstract Resume get(Object searchKey);
 
-    abstract Resume get(int index);
-
-    abstract void update(Resume resume, int index);
+    abstract void update(Resume r, Object searchKey);
 
 
     @Override
     public void update(Resume resume) {
-        if (resume == null) {
-            throw new NullPointerException();
+        if (resume != null) {
+            update(resume, getExistedSearchKey(resume.getUuid()));
         }
-        update(resume, getExistedIndex(resume.getUuid()));
     }
 
     @Override
     public void save(Resume resume) {
-        if (resume == null) {
-            throw new NullPointerException();
+        if (resume != null) {
+            save(resume, getNotExistedSearchKey(resume.getUuid()));
         }
-        save(resume, getNotExistedIndex(resume.getUuid()));
     }
 
     @Override
     public void delete(String uuid) {
-        delete(getExistedIndex(uuid));
+        delete(getExistedSearchKey(uuid));
     }
 
     @Override
     public Resume get(String uuid) {
-        return get(getExistedIndex(uuid));
+        return get(getExistedSearchKey(uuid));
     }
 
-    private int getExistedIndex(String uuid) {
-        int index = getIndex(uuid);
+    private Object getExistedSearchKey(String uuid) {
+        Object index = getSearchKey(uuid);
         if (!isExist(index)) {
             throw new NotExistStorageException(uuid);
         }
         return index;
     }
 
-    private int getNotExistedIndex(String uuid) {
-        int index = getIndex(uuid);
+    private Object getNotExistedSearchKey(String uuid) {
+        Object index = getSearchKey(uuid);
         if (isExist(index)) {
             throw new ExistStorageException(uuid);
         }
