@@ -4,6 +4,9 @@ import com.dofler.webapp.exception.ExistStorageException;
 import com.dofler.webapp.exception.NotExistStorageException;
 import com.dofler.webapp.model.Resume;
 
+import java.util.Collections;
+import java.util.List;
+
 public abstract class AbstractStorage implements Storage {
     abstract Object getSearchKey(String uuid);
 
@@ -15,8 +18,9 @@ public abstract class AbstractStorage implements Storage {
 
     abstract Resume get(Object searchKey);
 
-    abstract void update(Resume r, Object searchKey);
+    abstract List<Resume> getAll();
 
+    abstract void update(Resume r, Object searchKey);
 
     @Override
     public void update(Resume resume) {
@@ -42,20 +46,27 @@ public abstract class AbstractStorage implements Storage {
         return get(getExistedSearchKey(uuid));
     }
 
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> list = getAll();
+        Collections.sort(list);
+        return list;
+    }
+
     private Object getExistedSearchKey(String uuid) {
-        Object index = getSearchKey(uuid);
-        if (!isExist(index)) {
+        Object searchKey = getSearchKey(uuid);
+        if (!isExist(searchKey)) {
             throw new NotExistStorageException(uuid);
         }
-        return index;
+        return searchKey;
     }
 
     private Object getNotExistedSearchKey(String uuid) {
-        Object index = getSearchKey(uuid);
-        if (isExist(index)) {
+        Object searchKey = getSearchKey(uuid);
+        if (isExist(searchKey)) {
             throw new ExistStorageException(uuid);
         }
-        return index;
+        return searchKey;
     }
 
 }

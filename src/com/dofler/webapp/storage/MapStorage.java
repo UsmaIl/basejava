@@ -2,15 +2,14 @@ package com.dofler.webapp.storage;
 
 import com.dofler.webapp.model.Resume;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MapStorage extends AbstractStorage {
-    private final Map<String, Resume> map = new HashMap<>();
+    private final Map<String, Resume> resumeMap = new HashMap<>();
 
     @Override
-    Object getSearchKey(String uuid) {
-        return map.get(uuid);
+    Resume getSearchKey(String uuid) {
+        return resumeMap.get(uuid);
     }
 
     @Override
@@ -20,12 +19,12 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     void save(Resume r, Object searchKey) {
-        map.put(r.getUuid(), r);
+        resumeMap.put(r.getUuid(), r);
     }
 
     @Override
     void delete(Object resume) {
-        map.remove(((Resume) resume).getUuid());
+        resumeMap.remove(((Resume) resume).getUuid());
     }
 
     @Override
@@ -35,26 +34,26 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     void update(Resume r, Object resume) {
-        map.put(r.getUuid(), r);
+        resumeMap.put(r.getUuid(), r);
     }
 
     @Override
     public void clear() {
-        map.clear();
+        resumeMap.clear();
     }
 
     @Override
     public void update(Resume r) {
-        map.put(r.getUuid(), r);
+        resumeMap.put(r.getUuid(), r);
     }
 
     @Override
-    public Resume[] getAll() {
-        return map.values().toArray(new Resume[0]);
+    List<Resume> getAll() {
+        return new ArrayList<>(resumeMap.values());
     }
 
     @Override
     public int size() {
-        return map.size();
+        return resumeMap.size();
     }
 }

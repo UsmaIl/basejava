@@ -2,6 +2,8 @@ package com.dofler.webapp.storage;
 
 import com.dofler.webapp.model.Resume;
 
+import java.util.List;
+
 public interface Storage {
     void clear();
 
@@ -13,7 +15,7 @@ public interface Storage {
 
     Resume get(String uuid);
 
-    Resume[] getAll();
+    List<Resume> getAllSorted();
 
     int size();
 

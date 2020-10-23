@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
  */
 public class ArrayStorage extends AbstractArrayStorage {
     @Override
-    Object getSearchKey(String uuid) {
+    Integer getSearchKey(String uuid) {
         return IntStream.range(0, iterator)
                 .filter(i -> Objects.equals(uuid, storage[i].getUuid()))
                 .findFirst()

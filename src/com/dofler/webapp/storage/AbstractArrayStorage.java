@@ -4,12 +4,17 @@ import com.dofler.webapp.exception.StorageException;
 import com.dofler.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 
 abstract class AbstractArrayStorage extends AbstractStorage  {
     private static final int STORAGE_LIMIT = 10_000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int iterator = 0;
+
+    abstract void insertElement(Resume r, int index);
+
+    abstract void deleteElement(int index);
 
     @Override
     public final int size() {
@@ -49,18 +54,12 @@ abstract class AbstractArrayStorage extends AbstractStorage  {
     }
 
     @Override
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, iterator);
+    List<Resume> getAll() {
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, iterator));
     }
 
     @Override
     boolean isExist(Object index) {
         return (int) index >= 0;
     }
-
-
-    abstract void insertElement(Resume r, int index);
-
-    abstract void deleteElement(int index);
-
 }

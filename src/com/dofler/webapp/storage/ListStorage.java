@@ -4,6 +4,7 @@ import com.dofler.webapp.model.Resume;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListStorage extends AbstractStorage {
     private final List<Resume> list = new ArrayList<>();
@@ -19,8 +20,13 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    Object getSearchKey(String uuid) {
-        return list.indexOf(new Resume(uuid));
+    Integer getSearchKey(String uuid) {
+        for (int i = 0; i < list.size(); i++) {
+            if(Objects.equals(uuid, list.get(i).getUuid())) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -44,8 +50,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return list.toArray(new Resume[0]);
+    List<Resume> getAll() {
+        return list;
     }
 
     @Override
