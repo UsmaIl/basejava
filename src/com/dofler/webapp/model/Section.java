@@ -3,7 +3,7 @@ package com.dofler.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class Section<T extends Contentable> {
+public class Section<T extends Contentable> implements Contentable {
     private final List<T> institutions;
 
     public Section(List<T> institutions) {
