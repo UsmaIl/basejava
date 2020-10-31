@@ -4,7 +4,7 @@ import com.dofler.webapp.model.Resume;
 
 import java.util.*;
 
-public class MapStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage<Resume> {
     private final Map<String, Resume> resumeMap = new HashMap<>();
 
     @Override
@@ -13,27 +13,27 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    boolean isExist(Object resume) {
+    boolean isExist(Resume resume) {
         return resume != null;
     }
 
     @Override
-    void save(Resume r, Object searchKey) {
+    void save(Resume r, Resume searchKey) {
         resumeMap.put(r.getUuid(), r);
     }
 
     @Override
-    void delete(Object resume) {
-        resumeMap.remove(((Resume) resume).getUuid());
+    void doDelete(Resume resume) {
+        resumeMap.remove(resume.getUuid());
     }
 
     @Override
-    Resume get(Object resume) {
-        return (Resume) resume;
+    Resume doGet(Resume resume) {
+        return resume;
     }
 
     @Override
-    void update(Resume r, Object resume) {
+    void doUpdate(Resume r, Resume resume) {
         resumeMap.put(r.getUuid(), r);
     }
 

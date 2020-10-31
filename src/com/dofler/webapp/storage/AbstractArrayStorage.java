@@ -6,7 +6,7 @@ import com.dofler.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-abstract class AbstractArrayStorage extends AbstractStorage  {
+abstract class AbstractArrayStorage extends AbstractStorage<Integer>  {
     private static final int STORAGE_LIMIT = 10_000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -28,29 +28,29 @@ abstract class AbstractArrayStorage extends AbstractStorage  {
     }
 
     @Override
-    public void save(Resume resume, Object index) {
+    public void save(Resume resume, Integer index) {
         if (iterator == storage.length) {
             throw new StorageException("Storage overflow", resume.getUuid());
         }
-        insertElement(resume, (int) index);
+        insertElement(resume, index);
         iterator++;
     }
 
     @Override
-    public void delete(Object index) {
-        deleteElement((int) index);
+    public void doDelete(Integer index) {
+        deleteElement(index);
         storage[iterator - 1] = null;
         iterator--;
     }
 
     @Override
-    public void update(Resume resume, Object index) {
-        storage[(int) index] = resume;
+    public void doUpdate(Resume resume, Integer index) {
+        storage[index] = resume;
     }
 
     @Override
-    public Resume get(Object index) {
-        return storage[(int) index];
+    public Resume doGet(Integer index) {
+        return storage[index];
     }
 
     @Override
@@ -59,7 +59,7 @@ abstract class AbstractArrayStorage extends AbstractStorage  {
     }
 
     @Override
-    boolean isExist(Object index) {
-        return (int) index >= 0;
+    boolean isExist(Integer index) {
+        return  index >= 0;
     }
 }
