@@ -17,6 +17,22 @@ public class Resume implements Comparable<Resume> {
     private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private Map<SectionType, Contentable> sections = new EnumMap<>(SectionType.class);
 
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(), fullName);
+    }
+
+    public Resume(String uuid, String fullName) {
+        this.fullName = fullName;
+        this.uuid = uuid;
+    }
+
+    public Resume(String uuid, String fullName, Map<ContactType, String> contacts, Map<SectionType, Contentable> sections) {
+        this.uuid = uuid;
+        this.fullName = fullName;
+        this.contacts = contacts;
+        this.sections = sections;
+    }
+
     public Map<ContactType, String> getContacts() {
         return contacts;
     }
@@ -33,16 +49,6 @@ public class Resume implements Comparable<Resume> {
         this.sections = sections;
     }
 
-
-    public Resume(String fullName) {
-        this(UUID.randomUUID().toString(), fullName);
-    }
-
-    public Resume(String uuid, String fullName) {
-        this.fullName = fullName;
-        this.uuid = uuid;
-    }
-
     public String getUuid() {
         return uuid;
     }
@@ -51,6 +57,17 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
+    public String AllToString() {
+        StringBuilder str = new StringBuilder();
+        for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            str.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+        str.append("\n");
+        for (Map.Entry<SectionType, Contentable> entry : sections.entrySet()) {
+            str.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+        return str.toString();
+    }
     @Override
     public String toString() {
         return uuid + '[' + fullName + ']';
@@ -61,12 +78,15 @@ public class Resume implements Comparable<Resume> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName);
+        return Objects.equals(uuid, resume.uuid) &&
+               Objects.equals(fullName, resume.fullName) &&
+               Objects.equals(contacts, resume.contacts) &&
+               Objects.equals(sections, resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName);
+        return Objects.hash(uuid, fullName, contacts, sections);
     }
 
     @Override

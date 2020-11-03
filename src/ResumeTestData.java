@@ -2,11 +2,11 @@ import com.dofler.webapp.model.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        var myContact = new HashMap<ContactType, String>();
+        var myContact = new LinkedHashMap<ContactType, String>();
         myContact.put(ContactType.NAME, "Григорий");
         myContact.put(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
         myContact.put(ContactType.MESSENGER, "Skype: grigory.kislin");
@@ -16,7 +16,7 @@ public class ResumeTestData {
         myContact.put(ContactType.STACKOVERFLOW, "[Ссылка]Профиль Stackoverflow");
         myContact.put(ContactType.HOME_PAGE, "[Ссылка]Домашняя страница");
 
-        var myPositions = new HashMap<SectionType, Contentable>();
+        var myPositions = new LinkedHashMap<SectionType, Contentable>();
         myPositions.put(SectionType.OBJECTIVE, new TextSection(
                 "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
         myPositions.put(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
@@ -91,6 +91,7 @@ public class ResumeTestData {
         myResume.setContacts(myContact);
         myResume.setSections(myPositions);
 
-
+        System.out.println(myResume.toString());
+        System.out.println(myResume.AllToString());
     }
 }

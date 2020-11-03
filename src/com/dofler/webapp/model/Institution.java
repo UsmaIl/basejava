@@ -57,12 +57,12 @@ public class Institution implements Contentable {
 
     @Override
     public String toString() {
-        return "Organization [" +
+        return "Organization (" +
                 "homePage=" + homePage +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", title='" + title +
                 ", description='" + description +
-                ']';
+                ")\n";
     }
 }
