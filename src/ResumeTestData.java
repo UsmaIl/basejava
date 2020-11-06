@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 public class ResumeTestData {
     public static void main(String[] args) {
         var myContact = new LinkedHashMap<ContactType, String>();
-        myContact.put(ContactType.NAME, "Григорий");
+        myContact.put(ContactType.NAME, "Григорий Кислин");
         myContact.put(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
         myContact.put(ContactType.MESSENGER, "Skype: grigory.kislin");
         myContact.put(ContactType.MAIL, "gkislin@yandex.ru");
@@ -16,32 +16,32 @@ public class ResumeTestData {
         myContact.put(ContactType.STACKOVERFLOW, "[Ссылка]Профиль Stackoverflow");
         myContact.put(ContactType.HOME_PAGE, "[Ссылка]Домашняя страница");
 
-        var myPositions = new LinkedHashMap<SectionType, Contentable>();
+        var myPositions = new LinkedHashMap<SectionType, Section>();
         myPositions.put(SectionType.OBJECTIVE, new TextSection(
                 "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
         myPositions.put(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
 
-        var myAchievements = new ArrayList<TextSection>();
-        myAchievements.add(new TextSection("С 2013 года: разработка проектов " +
+        var myAchievements = new ArrayList<String>();
+        myAchievements.add("С 2013 года: разработка проектов " +
                 "\"Разработка Web приложения\",\"Java Enterprise\", " +
                 "\"Многомодульный maven. Многопоточность. XML (JAXB/StAX). " +
                 "Веб сервисы (JAX-RS/SOAP). Удаленное взаимодействие (JMS/AKKA)\". " +
-                "Организация онлайн стажировок и ведение проектов. Более 1000 выпускников."));
-        myAchievements.add(new TextSection("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. " +
-                "Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk."));
-        myAchievements.add(new TextSection("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. " +
+                "Организация онлайн стажировок и ведение проектов. Более 1000 выпускников.");
+        myAchievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. " +
+                "Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
+        myAchievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. " +
                 "Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. " +
-                "Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера."));
+                "Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера.");
 
-        myPositions.put(SectionType.ACHIEVEMENT, new Section<>(myAchievements));
+        myPositions.put(SectionType.ACHIEVEMENT, new ListSection(myAchievements));
 
-        var myQualifications = new ArrayList<TextSection>();
-        myQualifications.add(new TextSection("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2"));
-        myQualifications.add(new TextSection("Version control: Subversion, Git, Mercury, ClearCase, Perforce"));
-        myQualifications.add(new TextSection("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle"));
-        myQualifications.add(new TextSection("MySQL, SQLite, MS SQL, HSQLDB"));
-        myQualifications.add(new TextSection("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,"));
-        myPositions.put(SectionType.QUALIFICATIONS, new Section<>(myQualifications));
+        var myQualifications = new ArrayList<String>();
+        myQualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
+        myQualifications.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
+        myQualifications.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle");
+        myQualifications.add("MySQL, SQLite, MS SQL, HSQLDB");
+        myQualifications.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
+        myPositions.put(SectionType.QUALIFICATIONS, new ListSection(myQualifications));
 
         var myJobs = new ArrayList<Institution>();
         myJobs.add(new Institution(new Link("Java Online Projects", "http://javaops.ru/"),
@@ -67,7 +67,7 @@ public class ResumeTestData {
                         " Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. " +
                         "Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, " +
                         "xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"));
-        myPositions.put(SectionType.EXPERIENCE, new Section<>(myJobs));
+        myPositions.put(SectionType.EXPERIENCE, new ListInstitution(myJobs));
 
         var myEducations = new ArrayList<Institution>();
         myEducations.add(new Institution(new Link("Coursera", "https://www.coursera.org/course/progfun"),
@@ -85,13 +85,12 @@ public class ResumeTestData {
                 LocalDate.of(2005, 4, 1),
                 "3 месяца обучения мобильным IN сетям (Берлин)",
                 ""));
-        myPositions.put(SectionType.EDUCATION, new Section<>(myEducations));
+        myPositions.put(SectionType.EDUCATION, new ListInstitution(myEducations));
 
         var myResume = new Resume("Григорий Кислин");
         myResume.setContacts(myContact);
         myResume.setSections(myPositions);
 
-        System.out.println(myResume.toString());
-        System.out.println(myResume.AllToString());
+        System.out.println(myResume);
     }
 }

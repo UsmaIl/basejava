@@ -3,7 +3,7 @@ package com.dofler.webapp.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Institution implements Contentable {
+public class Institution extends Section {
     private final Link homePage;
     private final LocalDate startDate;
     private final LocalDate endDate;

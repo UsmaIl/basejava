@@ -7,22 +7,22 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListStorage extends AbstractStorage<Integer> {
-    private final List<Resume> actualResumes = new ArrayList<>();
+    private final List<Resume> resumes = new ArrayList<>();
 
     @Override
     public int size() {
-        return actualResumes.size();
+        return resumes.size();
     }
 
     @Override
     public void clear() {
-        actualResumes.clear();
+        resumes.clear();
     }
 
     @Override
     Integer getSearchKey(String uuid) {
-        for (int i = 0; i < actualResumes.size(); i++) {
-            if (Objects.equals(uuid, actualResumes.get(i).getUuid())) {
+        for (int i = 0; i < resumes.size(); i++) {
+            if (Objects.equals(uuid, resumes.get(i).getUuid())) {
                 return i;
             }
         }
@@ -36,26 +36,26 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     void save(Resume r, Integer index) {
-        actualResumes.add(r);
+        resumes.add(r);
     }
 
     @Override
     void doDelete(Integer index) {
-        actualResumes.remove(index.intValue());
+        resumes.remove(index.intValue());
     }
 
     @Override
     Resume doGet(Integer index) {
-        return actualResumes.get(index);
+        return resumes.get(index);
     }
 
     @Override
     List<Resume> getAll() {
-        return actualResumes;
+        return resumes;
     }
 
     @Override
     void doUpdate(Resume r, Integer index) {
-        actualResumes.set(index, r);
+        resumes.set(index, r);
     }
 }

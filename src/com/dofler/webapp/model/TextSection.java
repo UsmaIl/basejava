@@ -2,7 +2,7 @@ package com.dofler.webapp.model;
 
 import java.util.Objects;
 
-public class TextSection implements Contentable {
+public class TextSection extends Section {
     private final String content;
 
     public TextSection(String content) {

@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
     final Storage storage;
@@ -98,9 +98,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() {
-        List<Resume> list = storage.getAllSorted();
-        assertEquals(3, list.size());
-        assertEquals(Arrays.asList(RESUME_1, RESUME_2, RESUME_3), list);
+        List<Resume> actualResumes = storage.getAllSorted();
+        assertEquals(3, actualResumes.size());
+        assertEquals(Arrays.asList(RESUME_1, RESUME_2, RESUME_3), actualResumes);
     }
 
     @Test(expected = NotExistStorageException.class)
