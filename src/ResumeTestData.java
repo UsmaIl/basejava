@@ -1,8 +1,8 @@
 import com.dofler.webapp.model.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class ResumeTestData {
     public static void main(String[] args) {
@@ -45,46 +45,43 @@ public class ResumeTestData {
 
         var myJobs = new ArrayList<Institution>();
         myJobs.add(new Institution(new Link("Java Online Projects", "http://javaops.ru/"),
-                LocalDate.of(2013, 10, 1),
-                LocalDate.now(),
-                "Автор проекта.",
-                "Создание, организация и проведение Java онлайн проектов и стажировок."));
+                List.of(new Place(2013, 10, "Автор проекта.",
+                        "Создание, организация и проведение Java онлайн проектов и стажировок."))));
         myJobs.add(new Institution(new Link("Wrike", "https://www.wrike.com/"),
-                LocalDate.of(2014, 10, 1),
-                LocalDate.of(2016, 1, 1),
-                "Старший разработчик (backend)",
-                "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, " +
-                        "Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
-                        "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+                List.of(new Place(2014, 10, 2016, 1,
+                        "Старший разработчик (backend)",
+                        "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, " +
+                                "Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
+                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."))));
         myJobs.add(new Institution(new Link("RIT Center", null),
-                LocalDate.of(2012, 4, 1),
-                LocalDate.of(2014, 10, 1),
-                "Java архитектор",
-                "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, " +
-                        "ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. " +
-                        "Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, " +
-                        "1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html)." +
-                        " Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. " +
-                        "Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, " +
-                        "xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"));
+                List.of(new Place(2012, 4, 2014, 10,
+                        "Java архитектор",
+                        "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, " +
+                                "ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. " +
+                                "Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, " +
+                                "1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html)." +
+                                " Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. " +
+                                "Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, " +
+                                "xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"))));
         myPositions.put(SectionType.EXPERIENCE, new ListInstitution(myJobs));
 
         var myEducations = new ArrayList<Institution>();
         myEducations.add(new Institution(new Link("Coursera", "https://www.coursera.org/course/progfun"),
-                LocalDate.of(2013, 3, 1),
-                LocalDate.of(2013, 5, 1),
-                "\"Functional Programming Principles in Scala\" by Martin Odersky",
-                ""));
+                List.of(new Place(2013, 3, 2013, 5,
+                        "\"Functional Programming Principles in Scala\" by Martin Odersky",
+                        ""))));
         myEducations.add(new Institution(new Link("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366"),
-                LocalDate.of(2011, 3, 1),
-                LocalDate.of(2011, 4, 1),
-                "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.",
-                ""));
+                List.of(new Place(2011, 3, 2011, 4,
+                        "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.",
+                        ""))));
         myEducations.add(new Institution(new Link("Siemens AG", "http://www.siemens.ru/"),
-                LocalDate.of(2005, 1, 1),
-                LocalDate.of(2005, 4, 1),
-                "3 месяца обучения мобильным IN сетям (Берлин)",
-                ""));
+                List.of(new Place(2005, 1, 2005, 4,
+                        "3 месяца обучения мобильным IN сетям (Берлин)", ""))));
+        myEducations.add(new Institution(new Link("Санкт-Петербургский национальный исследовательский университет " +
+                "информационных технологий, механики и оптики", "http://www.ifmo.ru/"),
+                List.of(new Place(1993, 9, 1996, 7,
+                                "Аспирантура (программист С, С++)", ""),
+                        new Place(1987, 9, 1993, 3, "Инженер (программист Fortran, C)", ""))));
         myPositions.put(SectionType.EDUCATION, new ListInstitution(myEducations));
 
         var myResume = new Resume("Григорий Кислин");

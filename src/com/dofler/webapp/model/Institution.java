@@ -1,41 +1,23 @@
 package com.dofler.webapp.model;
 
-import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 public class Institution extends Section {
     private final Link homePage;
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final String title;
-    private final String description;
+    private final List<Place> places;
 
-    public Institution(Link homePage, LocalDate startStudyWorkDate, LocalDate endStudyDate, String title, String description) {
+    public Institution(Link homePage, List<Place> places) {
         this.homePage = homePage;
-        this.startDate = startStudyWorkDate;
-        this.endDate = endStudyDate;
-        this.title = title;
-        this.description = description;
+        this.places = places;
     }
 
     public Link getHomePage() {
         return homePage;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
+    public List<Place> getPlaces() {
+        return places;
     }
 
     @Override
@@ -43,26 +25,19 @@ public class Institution extends Section {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Institution that = (Institution) o;
-        return Objects.equals(homePage, that.homePage) &&
-                Objects.equals(startDate, that.startDate) &&
-                Objects.equals(endDate, that.endDate) &&
-                Objects.equals(title, that.title) &&
-                Objects.equals(description, that.description);
+        return Objects.equals(homePage, that.homePage) && Objects.equals(places, that.places);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(homePage, startDate, endDate, title, description);
+        return Objects.hash(homePage, places);
     }
 
     @Override
     public String toString() {
-        return "Organization (" +
+        return "Institution(" +
                 "homePage=" + homePage +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", title='" + title +
-                ", description='" + description +
-                ")\n";
+                ", places=" + places +
+                ')';
     }
 }
