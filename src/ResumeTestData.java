@@ -90,4 +90,33 @@ public class ResumeTestData {
 
         System.out.println(myResume);
     }
+
+    public Resume of(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
+
+        var contact = new LinkedHashMap<ContactType, String>();
+        contact.put(ContactType.NAME, "Иван Иванов");
+        contact.put(ContactType.PHONE_NUMBER, "+0(000) 000-0000");
+        contact.put(ContactType.MESSENGER, "Skype: ivan.ivanov");
+        contact.put(ContactType.MAIL, "ivanov@mail.ru");
+        contact.put(ContactType.LINKEDIN, "[Ссылка]Профиль LinkedIn");
+        contact.put(ContactType.GITHUB, "[Ссылка]Профиль GitHub");
+        contact.put(ContactType.STACKOVERFLOW, "[Ссылка]Профиль Stackoverflow");
+        contact.put(ContactType.HOME_PAGE, "[Ссылка]Домашняя страница");
+
+        resume.setContacts(contact);
+
+        var positions = new LinkedHashMap<SectionType, Section>();
+        positions.put(SectionType.OBJECTIVE, new TextSection("Работяга"));
+        positions.put(SectionType.PERSONAL, new TextSection("Трудолюбивый"));
+        positions.put(SectionType.ACHIEVEMENT, new TextSection("10000 лет опыта"));
+        positions.put(SectionType.QUALIFICATIONS, new TextSection("Java SE"));
+        positions.put(SectionType.EXPERIENCE, new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
+                List.of(new Place(1990, 12, "Это лучшая работа в мире", "Бог"))));
+        positions.put(SectionType.EDUCATION, new Institution(new Link("ТОПВУЗ", "http://topvuz.ru/"),
+                List.of(new Place(1980, 12, "Лучший вуз планеты", ""))));
+
+        resume.setSections(positions);
+        return resume;
+    }
 }
