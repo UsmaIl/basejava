@@ -1,5 +1,6 @@
 package com.dofler.webapp.storage;
 
+import com.dofler.webapp.ResumeTestData;
 import com.dofler.webapp.exception.ExistStorageException;
 import com.dofler.webapp.exception.NotExistStorageException;
 import com.dofler.webapp.model.Resume;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+
 
 public abstract class AbstractStorageTest {
     final Storage storage;
@@ -24,9 +26,9 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_3;
 
     static {
-        RESUME_1 = new Resume(UUID_1, "name1");
-        RESUME_2 = new Resume(UUID_2, "name2");
-        RESUME_3 = new Resume(UUID_3, "name3");
+        RESUME_1 = ResumeTestData.createTestResume(UUID_1, "name1");
+        RESUME_2 = ResumeTestData.createTestResume(UUID_2, "name2");
+        RESUME_3 = ResumeTestData.createTestResume(UUID_3, "name3");
     }
 
     AbstractStorageTest(Storage storage) {

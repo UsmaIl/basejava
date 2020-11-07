@@ -1,3 +1,5 @@
+package com.dofler.webapp;
+
 import com.dofler.webapp.model.*;
 
 import java.util.ArrayList;
@@ -91,7 +93,7 @@ public class ResumeTestData {
         System.out.println(myResume);
     }
 
-    public Resume of(String uuid, String fullName) {
+    public static Resume createTestResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
 
         var contact = new LinkedHashMap<ContactType, String>();
