@@ -3,10 +3,10 @@ package com.dofler.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class ListSection extends Section {
+public class ListAbstractSection extends AbstractSection {
     private final List<String> details;
 
-    public ListSection(List<String> details) {
+    public ListAbstractSection(List<String> details) {
         this.details = details;
     }
 
@@ -18,7 +18,7 @@ public class ListSection extends Section {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ListSection that = (ListSection) o;
+        ListAbstractSection that = (ListAbstractSection) o;
         return Objects.equals(details, that.details);
     }
 

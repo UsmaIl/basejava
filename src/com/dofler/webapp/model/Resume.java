@@ -15,13 +15,15 @@ public class Resume implements Comparable<Resume> {
     private final String fullName;
 
     private Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-    private Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    private Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(fullName, "fullName must not be null");
         this.fullName = fullName;
         this.uuid = uuid;
     }
@@ -34,11 +36,11 @@ public class Resume implements Comparable<Resume> {
         this.contacts = contacts;
     }
 
-    public Map<SectionType, Section> getSections() {
+    public Map<SectionType, AbstractSection> getSections() {
         return sections;
     }
 
-    public void setSections(Map<SectionType, Section> sections) {
+    public void setSections(Map<SectionType, AbstractSection> sections) {
         this.sections = sections;
     }
 
@@ -57,7 +59,7 @@ public class Resume implements Comparable<Resume> {
             str.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
         }
         str.append("\n");
-        for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+        for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
             str.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
         }
         return str.toString();

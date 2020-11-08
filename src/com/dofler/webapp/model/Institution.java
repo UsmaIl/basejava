@@ -3,7 +3,7 @@ package com.dofler.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class Institution extends Section {
+public class Institution extends AbstractSection {
     private final Link homePage;
     private final List<Place> places;
 

@@ -3,10 +3,11 @@ package com.dofler.webapp.model;
 import java.util.List;
 import java.util.Objects;
 
-public class ListInstitution extends Section {
+public class ListInstitution extends AbstractSection {
     private final List<Institution> institutions;
 
     public ListInstitution(List<Institution> institutions) {
+        Objects.requireNonNull(institutions, "institutions must not be null");
         this.institutions = institutions;
     }
 
