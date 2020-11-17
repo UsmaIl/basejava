@@ -2,11 +2,14 @@ package com.dofler.webapp.model;
 
 import com.dofler.webapp.util.DateUtil;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Objects;
 
-public class Place {
+public class Place implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final String title;

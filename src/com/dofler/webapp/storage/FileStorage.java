@@ -3,18 +3,20 @@ package com.dofler.webapp.storage;
 import com.dofler.webapp.exception.StorageException;
 import com.dofler.webapp.model.Resume;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private File directory;
+    private SerializationProcess serializationProcess;
 
-    AbstractFileStorage(File directory) {
+    FileStorage(File directory, SerializationProcess serializationProcess) {
         Objects.requireNonNull(directory, "directory must not be null");
+        Objects.requireNonNull(serializationProcess, "serializationProcess must not be null");
         this.directory = directory;
+        this.serializationProcess = serializationProcess;
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
@@ -70,9 +72,13 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
     }
 
-    abstract void doWrite(Resume r, File file) throws IOException;
+    private void doWrite(Resume resume, File file) throws IOException {
+        serializationProcess.doWrite(resume, new BufferedOutputStream((new FileOutputStream(file))));
+    }
 
-    abstract Resume doRead(File file) throws IOException;
+    private Resume doRead(File file) throws IOException {
+        return serializationProcess.doRead(new BufferedInputStream(new FileInputStream(file)));
+    }
 
     @Override
     void doUpdate(Resume r, File file) {
@@ -106,4 +112,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return list;
     }
 
+    public void setSerializationProcess(SerializationProcess serializationProcess) {
+        this.serializationProcess = serializationProcess;
+    }
 }

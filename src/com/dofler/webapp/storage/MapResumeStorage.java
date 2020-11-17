@@ -2,7 +2,10 @@ package com.dofler.webapp.storage;
 
 import com.dofler.webapp.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MapResumeStorage extends AbstractStorage<Resume> {
     private final Map<String, Resume> resumeMap = new HashMap<>();

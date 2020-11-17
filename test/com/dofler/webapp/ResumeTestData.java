@@ -19,9 +19,9 @@ public class ResumeTestData {
         myContact.put(ContactType.HOME_PAGE, "[Ссылка]Домашняя страница");
 
         var myPositions = new LinkedHashMap<SectionType, AbstractSection>();
-        myPositions.put(SectionType.OBJECTIVE, new TextAbstractSection(
+        myPositions.put(SectionType.OBJECTIVE, new TextSection(
                 "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
-        myPositions.put(SectionType.PERSONAL, new TextAbstractSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
+        myPositions.put(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
 
         var myAchievements = new ArrayList<String>();
         myAchievements.add("С 2013 года: разработка проектов " +
@@ -35,7 +35,7 @@ public class ResumeTestData {
                 "Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: Scala/Play/Anorm/JQuery. " +
                 "Разработка SSO аутентификации и авторизации различных ERP модулей, интеграция CIFS/SMB java сервера.");
 
-        myPositions.put(SectionType.ACHIEVEMENT, new ListAbstractSection(myAchievements));
+        myPositions.put(SectionType.ACHIEVEMENT, new ListSection(myAchievements));
 
         var myQualifications = new ArrayList<String>();
         myQualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
@@ -43,7 +43,7 @@ public class ResumeTestData {
         myQualifications.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle");
         myQualifications.add("MySQL, SQLite, MS SQL, HSQLDB");
         myQualifications.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
-        myPositions.put(SectionType.QUALIFICATIONS, new ListAbstractSection(myQualifications));
+        myPositions.put(SectionType.QUALIFICATIONS, new ListSection(myQualifications));
 
         var myJobs = new ArrayList<Institution>();
         myJobs.add(new Institution(new Link("Java Online Projects", "http://javaops.ru/"),
@@ -109,10 +109,10 @@ public class ResumeTestData {
         resume.setContacts(contact);
 
         var positions = new LinkedHashMap<SectionType, AbstractSection>();
-        positions.put(SectionType.OBJECTIVE, new TextAbstractSection("Работяга"));
-        positions.put(SectionType.PERSONAL, new TextAbstractSection("Трудолюбивый"));
-        positions.put(SectionType.ACHIEVEMENT, new TextAbstractSection("Java SE"));
-        positions.put(SectionType.QUALIFICATIONS, new TextAbstractSection("10000 лет опыта"));
+        positions.put(SectionType.OBJECTIVE, new TextSection("Работяга"));
+        positions.put(SectionType.PERSONAL, new TextSection("Трудолюбивый"));
+        positions.put(SectionType.ACHIEVEMENT, new ListSection(List.of("10000 лет опыта")));
+        positions.put(SectionType.QUALIFICATIONS, new ListSection(List.of("Java SE")));
         ListInstitution listInstitution = new ListInstitution(List.of(
                 new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
                         List.of(new Place(1985, 5, "Это просто работа", "Обычный работага"))),

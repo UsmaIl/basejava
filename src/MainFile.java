@@ -30,16 +30,22 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        getListFiles(dir);
+        getListFiles(dir, 0);
     }
 
-    public static void getListFiles(File file) {
-        System.out.println(file);
+    public static void getListFiles(File file, int offset) {
+        for (int i = 0; i < offset; i++) {
+            System.out.print(" ");
+        }
+        System.out.println(file.getName());
+        if (file.isDirectory()) {
+            offset++;
+        }
         if (file.isDirectory()) {
             String[] listOfFilesOrDirectories = file.list();
             if (listOfFilesOrDirectories != null) {
                 for (String fileOrDirectory : listOfFilesOrDirectories) {
-                    getListFiles(new File(file, fileOrDirectory));
+                    getListFiles(new File(file, fileOrDirectory), offset);
                 }
             }
         }

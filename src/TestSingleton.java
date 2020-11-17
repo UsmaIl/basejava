@@ -1,9 +1,10 @@
-package com.dofler.webapp.storage;
-
 import com.dofler.webapp.model.SectionType;
 
 public class TestSingleton {
     private static TestSingleton instance = new TestSingleton();
+
+    private TestSingleton() {
+    }
 
     private static TestSingleton getInstance() {
         if (instance == null) {
@@ -11,8 +12,6 @@ public class TestSingleton {
         }
         return instance;
     }
-
-    private TestSingleton() {}
 
     public static void main(String[] args) {
         TestSingleton.getInstance().toString();

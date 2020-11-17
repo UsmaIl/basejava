@@ -6,7 +6,7 @@ import com.dofler.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-abstract class AbstractArrayStorage extends AbstractStorage<Integer>  {
+abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     private static final int STORAGE_LIMIT = 10_000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -60,6 +60,6 @@ abstract class AbstractArrayStorage extends AbstractStorage<Integer>  {
 
     @Override
     boolean isExist(Integer index) {
-        return  index >= 0;
+        return index >= 0;
     }
 }
