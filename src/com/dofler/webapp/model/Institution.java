@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class Institution extends AbstractSection {
-    private final Link homePage;
-    private final List<Place> places;
+    private Link homePage;
+    private List<Place> places;
+
+    public Institution() {
+    }
 
     public Institution(Link homePage, List<Place> places) {
         this.homePage = homePage;

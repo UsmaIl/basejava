@@ -1,11 +1,15 @@
 package com.dofler.webapp.model;
 
+
 import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends AbstractSection {
 
-    private final List<String> details;
+    private List<String> details;
+
+    public ListSection() {
+    }
 
     public ListSection(List<String> details) {
         this.details = details;

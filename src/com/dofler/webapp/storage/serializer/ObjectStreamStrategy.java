@@ -1,11 +1,11 @@
-package com.dofler.webapp.storage;
+package com.dofler.webapp.storage.serializer;
 
 import com.dofler.webapp.exception.StorageException;
 import com.dofler.webapp.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage implements SerializationProcess {
+public class ObjectStreamStrategy implements SerializationStrategy {
 
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {

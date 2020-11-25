@@ -2,6 +2,7 @@ package com.dofler.webapp.storage;
 
 import com.dofler.webapp.exception.StorageException;
 import com.dofler.webapp.model.Resume;
+import com.dofler.webapp.storage.serializer.SerializationStrategy;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,14 +10,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class FileStorage extends AbstractStorage<File> {
+    private final SerializationStrategy serializationStrategy;
     private File directory;
-    private final SerializationProcess serializationProcess;
 
-    FileStorage(File directory, SerializationProcess serializationProcess) {
+    FileStorage(File directory, SerializationStrategy serializationStrategy) {
         Objects.requireNonNull(directory, "directory must not be null");
-        Objects.requireNonNull(serializationProcess, "serializationProcess must not be null");
+        Objects.requireNonNull(serializationStrategy, "serializationProcess must not be null");
         this.directory = directory;
-        this.serializationProcess = serializationProcess;
+        this.serializationStrategy = serializationStrategy;
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
         }
@@ -36,20 +37,14 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File[] files = getFilesList();
-        if (files != null) {
-            for (File file : files) {
-                doDelete(file);
-            }
+        for (File file : files) {
+            doDelete(file);
         }
     }
 
     @Override
     public int size() {
-        File[] files = getFilesList();
-        if (files != null) {
-            return files.length;
-        }
-        return 0;
+        return getFilesList().length;
     }
 
     @Override
@@ -75,7 +70,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     void doUpdate(Resume r, File file) {
         try {
-            serializationProcess.doWrite(r, new BufferedOutputStream((new FileOutputStream(file))));
+            serializationStrategy.doWrite(r, new BufferedOutputStream((new FileOutputStream(file))));
         } catch (IOException e) {
             throw new StorageException("Error writing file", r.getUuid(), e);
         }
@@ -84,7 +79,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     Resume doGet(File file) {
         try {
-            return serializationProcess.doRead(new BufferedInputStream(new FileInputStream(file)));
+            return serializationStrategy.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Error reading file", file.getName(), e);
         }
@@ -93,10 +88,6 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     List<Resume> getAll() {
         File[] files = getFilesList();
-        if (files == null) {
-            throw new StorageException("Error reading directory", directory.getName());
-        }
-
         List<Resume> list = new ArrayList<>(files.length);
         for (File file : files) {
             list.add(doGet(file));
@@ -105,6 +96,10 @@ public class FileStorage extends AbstractStorage<File> {
     }
 
     private File[] getFilesList() {
-        return directory.listFiles();
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("Error reading directory", directory.getName());
+        }
+        return files;
     }
 }

@@ -1,19 +1,30 @@
 package com.dofler.webapp.model;
 
 import com.dofler.webapp.util.DateUtil;
+import com.dofler.webapp.util.LocalDateAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Place implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-    private final String title;
-    private final String description;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate startDate;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate endDate;
+    private String title;
+
+    private String description;
+
+    public Place() {
+    }
 
     public Place(LocalDate startDate, LocalDate endDate, String title, String description) {
         Objects.requireNonNull(startDate, "startDate must not be null");
@@ -31,22 +42,6 @@ public class Place implements Serializable {
 
     public Place(int startYear, int startMonth, int endYear, int endMonth, String title, String description) {
         this(DateUtil.of(startYear, Month.of(startMonth)), DateUtil.of(endYear, Month.of(endMonth)), title, description);
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     @Override
@@ -73,5 +68,21 @@ public class Place implements Serializable {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

@@ -2,6 +2,7 @@ package com.dofler.webapp.storage;
 
 import com.dofler.webapp.exception.StorageException;
 import com.dofler.webapp.model.Resume;
+import com.dofler.webapp.storage.serializer.SerializationStrategy;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -16,13 +17,13 @@ import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
-    private final SerializationProcess serializationProcess;
+    private final SerializationStrategy serializationStrategy;
 
-    PathStorage(String dir, SerializationProcess serializationProcess) {
+    PathStorage(String dir, SerializationStrategy serializationStrategy) {
         Objects.requireNonNull(dir, "directory must not be null");
         Objects.requireNonNull(dir, "serializationProcess must not be null");
         directory = Paths.get(dir);
-        this.serializationProcess = serializationProcess;
+        this.serializationStrategy = serializationStrategy;
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(directory + " is not directory or is not writable");
         }
@@ -70,7 +71,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     void doUpdate(Resume r, Path path) {
         try {
-            serializationProcess.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
+            serializationStrategy.doWrite(r, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Error writing Path", r.getUuid(), e);
         }
@@ -79,7 +80,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     Resume doGet(Path path) {
         try {
-            return serializationProcess.doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return serializationStrategy.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Error reading Path", getFileNameString(path), e);
         }

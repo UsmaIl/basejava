@@ -3,7 +3,10 @@ package com.dofler.webapp.model;
 import java.util.Objects;
 
 public class TextSection extends AbstractSection {
-    private final String content;
+    private String content;
+
+    public TextSection() {
+    }
 
     public TextSection(String content) {
         this.content = content;

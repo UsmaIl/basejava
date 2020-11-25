@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class ListInstitution extends AbstractSection {
-    private final List<Institution> institutions;
+    private List<Institution> institutions;
+
+    public ListInstitution() {
+    }
 
     public ListInstitution(List<Institution> institutions) {
         Objects.requireNonNull(institutions, "institutions must not be null");
