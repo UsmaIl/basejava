@@ -119,8 +119,8 @@ public class ResumeTestData {
                 new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
                         List.of(new Place(1990, 12, "Это лучшая работа в мире", "Бог")))));
         positions.put(SectionType.EXPERIENCE, listInstitution);
-        positions.put(SectionType.EDUCATION, new Institution(new Link("ТОПВУЗ", "http://topvuz.ru/"),
-                List.of(new Place(1980, 12, "Лучший вуз планеты", ""))));
+        positions.put(SectionType.EDUCATION, new ListInstitution(List.of(new Institution(new Link("ТОПВУЗ", "http://topvuz.ru/"),
+                List.of(new Place(1980, 12, "Лучший вуз планеты", ""))))));
 
         resume.setSections(positions);
         return resume;

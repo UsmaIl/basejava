@@ -8,7 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@FunctionalInterface
+interface WriterTypes<T> {
+    void write(T t) throws IOException;
+}
+
+interface ReaderTypes<T> {
+    T read() throws IOException;
+}
+
 public class DataStreamStrategy implements SerializationStrategy {
+
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
@@ -20,43 +30,57 @@ public class DataStreamStrategy implements SerializationStrategy {
             dos.writeInt(contacts.size());
 
             for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                dos.writeUTF(entry.getKey().getTitle());
+                dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             }
 
-            dos.writeInt(contacts.size());
+            Map<SectionType, AbstractSection> sections = r.getSections();
 
-            for (Map.Entry<SectionType, AbstractSection> entry : r.getSections().entrySet()) {
+            dos.writeInt(sections.size());
+
+            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
                 SectionType sectionType = entry.getKey();
                 AbstractSection abstractSection = entry.getValue();
-                dos.writeUTF(sectionType.getTitle());
+                dos.writeUTF(sectionType.name());
                 switch (sectionType) {
-                    case PERSONAL, OBJECTIVE -> dos.writeUTF(((TextSection) abstractSection).getContent());
-                    case ACHIEVEMENT, QUALIFICATIONS -> {
-                        List<String> sections = ((ListSection) abstractSection).getListSection();
-                        dos.writeInt(sections.size());
-                        for (String listSection : ((ListSection) abstractSection).getListSection()) {
-                            dos.writeUTF(listSection);
-                        }
-                    }
-                    case EXPERIENCE, EDUCATION -> {
-                        List<Institution> institutions = ((ListInstitution) abstractSection).getListInstitution();
-                        dos.writeInt(institutions.size());
-                        for (Institution institution : institutions) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        dos.writeUTF(((TextSection) abstractSection).getContent());
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        writeToList(dos, ((ListSection) abstractSection).getListSection(), dos::writeUTF);
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        List<Institution> list = ((ListInstitution) abstractSection).getListInstitution();
+                        writeToList(dos, list, institution -> {
                             dos.writeUTF(institution.getHomePage().getName());
                             dos.writeUTF(institution.getHomePage().getUrl());
-                            for (Place place : institution.getPlaces()) {
-                                dos.writeUTF(place.getStartDate().toString());
-                                dos.writeUTF(place.getEndDate().toString());
+                            writeToList(dos, institution.getPlaces(), place -> {
+                                writeLocalDate(dos, place.getStartDate());
+                                writeLocalDate(dos, place.getEndDate());
                                 dos.writeUTF(place.getTitle());
                                 dos.writeUTF(place.getDescription());
-                            }
-                        }
-                    }
+                            });
+                        });
+                        break;
                 }
-
             }
         }
+    }
+
+    private <T> void writeToList(DataOutputStream dos, List<T> list, WriterTypes<T> writer) throws IOException {
+        dos.writeInt(list.size());
+        for (T item : list) {
+            writer.write(item);
+        }
+    }
+
+    private void writeLocalDate(DataOutputStream dos, LocalDate ld) throws IOException {
+        dos.writeInt(ld.getYear());
+        dos.writeInt(ld.getMonth().getValue());
+        dos.writeInt(ld.getDayOfMonth());
     }
 
     @Override
@@ -78,34 +102,34 @@ public class DataStreamStrategy implements SerializationStrategy {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        int sizeOfSections = dis.readInt();
-                        List<String> sections = new ArrayList<>(sizeOfSections);
-                        for (int j = 0; j < sizeOfSections; j++) {
-                            sections.add(dis.readUTF());
-                        }
-                        resume.addSection(sectionType, new ListSection(sections));
-
+                        resume.addSection(sectionType, new ListSection(readList(dis, dis::readUTF)));
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
-                        int sizeOfInstitutions = dis.readInt();
-                        List<Institution> institutions = new ArrayList<>(sizeOfInstitutions);
-                        for (int j = 0; j < sizeOfInstitutions; j++) {
-                            List<Place> positions = institutions.get(j).getPlaces();
-                            for (int k = 0; k < positions.size(); k++) {
-                                positions.add(new Place(readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()));
-                            }
-                            institutions.add(new Institution(new Link(dis.readUTF(), dis.readUTF()), positions));
-                        }
+                        resume.addSection(sectionType, new ListInstitution(readList(dis,
+                                () -> new Institution(new Link(dis.readUTF(), dis.readUTF()),
+                                        readList(dis, () -> new Place(
+                                                readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()))
+                                ))));
+                        break;
                     default:
                         throw new IllegalStateException();
                 }
             }
+            return resume;
         }
-        return null;
+    }
+
+    private <T> List<T> readList(DataInputStream dis, ReaderTypes<T> reader) throws IOException {
+        int size = dis.readInt();
+        List<T> list = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(reader.read());
+        }
+        return list;
     }
 
     private LocalDate readLocalDate(DataInputStream dis) throws IOException {
-        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+        return LocalDate.of(dis.readInt(), dis.readInt(), dis.readInt());
     }
 }
