@@ -5,10 +5,11 @@ import com.dofler.webapp.model.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        var myContact = new LinkedHashMap<ContactType, String>();
+        LinkedHashMap<ContactType, String> myContact = new LinkedHashMap<>();
         myContact.put(ContactType.NAME, "Григорий Кислин");
         myContact.put(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
         myContact.put(ContactType.MESSENGER, "Skype: grigory.kislin");
@@ -18,12 +19,12 @@ public class ResumeTestData {
         myContact.put(ContactType.STACKOVERFLOW, "[Ссылка]Профиль Stackoverflow");
         myContact.put(ContactType.HOME_PAGE, "[Ссылка]Домашняя страница");
 
-        var myPositions = new LinkedHashMap<SectionType, AbstractSection>();
+        Map<SectionType, AbstractSection> myPositions = new LinkedHashMap<>();
         myPositions.put(SectionType.OBJECTIVE, new TextSection(
                 "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
         myPositions.put(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность. Пурист кода и архитектуры."));
 
-        var myAchievements = new ArrayList<String>();
+        List<String> myAchievements = new ArrayList<>();
         myAchievements.add("С 2013 года: разработка проектов " +
                 "\"Разработка Web приложения\",\"Java Enterprise\", " +
                 "\"Многомодульный maven. Многопоточность. XML (JAXB/StAX). " +
@@ -37,7 +38,7 @@ public class ResumeTestData {
 
         myPositions.put(SectionType.ACHIEVEMENT, new ListSection(myAchievements));
 
-        var myQualifications = new ArrayList<String>();
+        List<String> myQualifications = new ArrayList<>();
         myQualifications.add("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
         myQualifications.add("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
         myQualifications.add("DB: PostgreSQL(наследование, pgplsql, PL/Python), Redis (Jedis), H2, Oracle");
@@ -45,48 +46,59 @@ public class ResumeTestData {
         myQualifications.add("Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy,");
         myPositions.put(SectionType.QUALIFICATIONS, new ListSection(myQualifications));
 
-        var myJobs = new ArrayList<Institution>();
+        List<Institution> myJobs = new ArrayList<>();
         myJobs.add(new Institution(new Link("Java Online Projects", "http://javaops.ru/"),
-                List.of(new Place(2013, 10, "Автор проекта.",
-                        "Создание, организация и проведение Java онлайн проектов и стажировок."))));
+                new ArrayList<Place>() {{
+                    add(new Place(2013, 10, "Автор проекта.",
+                            "Создание, организация и проведение Java онлайн проектов и стажировок."));
+                }}));
         myJobs.add(new Institution(new Link("Wrike", "https://www.wrike.com/"),
-                List.of(new Place(2014, 10, 2016, 1,
-                        "Старший разработчик (backend)",
-                        "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, " +
-                                "Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
-                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."))));
+                new ArrayList<Place>() {{
+                    add(new Place(2014, 10, 2016, 1,
+                            "Старший разработчик (backend)",
+                            "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, " +
+                                    "Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
+                                    "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
+                }}));
         myJobs.add(new Institution(new Link("RIT Center", null),
-                List.of(new Place(2012, 4, 2014, 10,
-                        "Java архитектор",
-                        "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, " +
-                                "ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. " +
-                                "Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, " +
-                                "1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html)." +
-                                " Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. " +
-                                "Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, " +
-                                "xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"))));
+                new ArrayList<Place>() {{
+                    add(new Place(2012, 4, 2014, 10,
+                            "Java архитектор",
+                            "Организация процесса разработки системы ERP для разных окружений: релизная политика, версионирование, " +
+                                    "ведение CI (Jenkins), миграция базы (кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. " +
+                                    "Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, " +
+                                    "1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html)." +
+                                    " Интеграция Alfresco JLAN для online редактирование из браузера документов MS Office. " +
+                                    "Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, " +
+                                    "xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, PL/Python"));
+                }}));
         myPositions.put(SectionType.EXPERIENCE, new ListInstitution(myJobs));
 
-        var myEducations = new ArrayList<Institution>();
+        List<Institution> myEducations = new ArrayList<>();
         myEducations.add(new Institution(new Link("Coursera", "https://www.coursera.org/course/progfun"),
-                List.of(new Place(2013, 3, 2013, 5,
-                        "\"Functional Programming Principles in Scala\" by Martin Odersky",
-                        ""))));
+                new ArrayList<Place>() {{
+                    add(new Place(2013, 3, 2013, 5,
+                            "\"Functional Programming Principles in Scala\" by Martin Odersky",
+                            ""));
+                }}));
         myEducations.add(new Institution(new Link("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366"),
-                List.of(new Place(2011, 3, 2011, 4,
-                        "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.",
-                        ""))));
+                new ArrayList<Place>() {{
+                    add(new Place(2011, 3, 2011, 4,
+                            "Курс \"Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.", ""));
+                }}));
         myEducations.add(new Institution(new Link("Siemens AG", "http://www.siemens.ru/"),
-                List.of(new Place(2005, 1, 2005, 4,
-                        "3 месяца обучения мобильным IN сетям (Берлин)", ""))));
+                new ArrayList<Place>() {{
+                    add(new Place(2005, 1, 2005, 4,
+                            "3 месяца обучения мобильным IN сетям (Берлин)", ""));
+                }}));
+        List<Place> places = new ArrayList<>();
+        places.add(new Place(1993, 9, 1996, 7, "Аспирантура (программист С, С++)", ""));
+        places.add(new Place(1987, 9, 1993, 3, "Инженер (программист Fortran, C)", ""));
         myEducations.add(new Institution(new Link("Санкт-Петербургский национальный исследовательский университет " +
-                "информационных технологий, механики и оптики", "http://www.ifmo.ru/"),
-                List.of(new Place(1993, 9, 1996, 7,
-                                "Аспирантура (программист С, С++)", ""),
-                        new Place(1987, 9, 1993, 3, "Инженер (программист Fortran, C)", ""))));
+                "информационных технологий, механики и оптики", "http://www.ifmo.ru/"), places));
         myPositions.put(SectionType.EDUCATION, new ListInstitution(myEducations));
 
-        var myResume = new Resume("Григорий Кислин");
+        Resume myResume = new Resume("Григорий Кислин");
         myResume.setContacts(myContact);
         myResume.setSections(myPositions);
 
@@ -96,7 +108,7 @@ public class ResumeTestData {
     public static Resume createTestResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
 
-        var contact = new LinkedHashMap<ContactType, String>();
+        Map<ContactType, String> contact = new LinkedHashMap<>();
         contact.put(ContactType.NAME, "Иван Иванов");
         contact.put(ContactType.PHONE_NUMBER, "+0(000) 000-0000");
         contact.put(ContactType.MESSENGER, "Skype: ivan.ivanov");
@@ -108,20 +120,32 @@ public class ResumeTestData {
 
         resume.setContacts(contact);
 
-        var positions = new LinkedHashMap<SectionType, AbstractSection>();
+        Map<SectionType, AbstractSection> positions = new LinkedHashMap<>();
         positions.put(SectionType.OBJECTIVE, new TextSection("Работяга"));
         positions.put(SectionType.PERSONAL, new TextSection("Трудолюбивый"));
-        positions.put(SectionType.ACHIEVEMENT, new ListSection(List.of("10000 лет опыта")));
-        positions.put(SectionType.QUALIFICATIONS, new ListSection(List.of("Java SE")));
-        ListInstitution listInstitution = new ListInstitution(List.of(
-                new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
-                        List.of(new Place(1985, 5, "Это просто работа", "Обычный работага"))),
-                new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
-                        List.of(new Place(1990, 12, "Это лучшая работа в мире", "Бог")))));
+        positions.put(SectionType.ACHIEVEMENT, new ListSection(new ArrayList<String>() {{
+            add("10000 лет опыта");
+        }}));
+        positions.put(SectionType.QUALIFICATIONS, new ListSection(new ArrayList<String>() {{
+            add("Java SE");
+        }}));
+        List<Institution> institutions = new ArrayList<>();
+        institutions.add(new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
+                new ArrayList<Place>() {{
+                    add((new Place(1985, 5, "Это просто работа", "Обычный работага")));
+                }}));
+        institutions.add(new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
+                new ArrayList<Place>() {{
+                    add(new Place(1990, 12, "Это лучшая работа в мире", "Бог"));
+                }}));
+        ListInstitution listInstitution = new ListInstitution(institutions);
         positions.put(SectionType.EXPERIENCE, listInstitution);
-        positions.put(SectionType.EDUCATION, new ListInstitution(List.of(new Institution(new Link("ТОПВУЗ", "http://topvuz.ru/"),
-                List.of(new Place(1980, 12, "Лучший вуз планеты", ""))))));
-
+        institutions = new ArrayList<>();
+        institutions.add(new Institution(new Link("ТОПВУЗ", "http://topvuz.ru/"),
+                new ArrayList<Place>() {{
+                    add(new Place(1980, 12, "Лучший вуз планеты", ""));
+                }}));
+        positions.put(SectionType.EDUCATION, new ListInstitution(institutions));
         resume.setSections(positions);
         return resume;
     }
