@@ -5,19 +5,20 @@ import com.dofler.webapp.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-
-@FunctionalInterface
-interface WriterTypes<T> {
-    void write(T t) throws IOException;
-}
-
-interface ReaderTypes<T> {
-    T read() throws IOException;
-}
 
 public class DataStreamStrategy implements SerializationStrategy {
+
+    @FunctionalInterface
+    interface WriterTypes<T> {
+        void write(T t) throws IOException;
+    }
+
+    @FunctionalInterface
+    interface ReaderTypes<T> {
+        T read() throws IOException;
+    }
 
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
@@ -25,20 +26,12 @@ public class DataStreamStrategy implements SerializationStrategy {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
 
-            Map<ContactType, String> contacts = r.getContacts();
-
-            dos.writeInt(contacts.size());
-
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            writeToCollection(dos, r.getContacts().entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
 
-            Map<SectionType, AbstractSection> sections = r.getSections();
-
-            dos.writeInt(sections.size());
-
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+            writeToCollection(dos, r.getSections().entrySet(), entry -> {
                 SectionType sectionType = entry.getKey();
                 AbstractSection abstractSection = entry.getValue();
                 dos.writeUTF(sectionType.name());
@@ -49,15 +42,15 @@ public class DataStreamStrategy implements SerializationStrategy {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        writeToList(dos, ((ListSection) abstractSection).getListSection(), dos::writeUTF);
+                        writeToCollection(dos, ((ListSection) abstractSection).getListSection(), dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
                         List<Institution> list = ((ListInstitution) abstractSection).getListInstitution();
-                        writeToList(dos, list, institution -> {
+                        writeToCollection(dos, list, institution -> {
                             dos.writeUTF(institution.getHomePage().getName());
                             dos.writeUTF(institution.getHomePage().getUrl());
-                            writeToList(dos, institution.getPlaces(), place -> {
+                            writeToCollection(dos, institution.getPlaces(), place -> {
                                 writeLocalDate(dos, place.getStartDate());
                                 writeLocalDate(dos, place.getEndDate());
                                 dos.writeUTF(place.getTitle());
@@ -65,14 +58,17 @@ public class DataStreamStrategy implements SerializationStrategy {
                             });
                         });
                         break;
+                    default:
+                        throw new IllegalStateException();
                 }
-            }
+            });
         }
     }
 
-    private <T> void writeToList(DataOutputStream dos, List<T> list, WriterTypes<T> writer) throws IOException {
-        dos.writeInt(list.size());
-        for (T item : list) {
+    private <T> void writeToCollection(DataOutputStream dos, Collection<T> collection,
+                                       WriterTypes<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
             writer.write(item);
         }
     }
