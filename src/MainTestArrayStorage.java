@@ -11,12 +11,12 @@ public class MainTestArrayStorage {
     private static final Storage SORTED_ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
-        final Resume r1 = new Resume("uuid1");
-        final Resume r2 = new Resume("uuid2");
-        final Resume r3 = new Resume("uuid3");
-        final Resume r4 = new Resume("uuid4");
-        final Resume r5 = new Resume("uuid5");
-        final Resume r6 = new Resume("uuid6");
+        final Resume r1 = ResumeTestData.createTestResume("uuid1", "name1");
+        final Resume r2 = ResumeTestData.createTestResume("uuid2", "name2");
+        final Resume r3 = ResumeTestData.createTestResume("uuid3", "name3");
+        final Resume r4 = ResumeTestData.createTestResume("uuid4", "name4");
+        final Resume r5 = ResumeTestData.createTestResume("uuid5", "name5");
+        final Resume r6 = ResumeTestData.createTestResume("uuid6", "name6");
 
         //======================= Testing ARRAY_STORAGE ==============================
         System.out.println("======================= Testing ARRAY_STORAGE ==============================");
