@@ -39,12 +39,14 @@ public class DataStreamStrategy implements SerializationStrategy {
                         List<Institution> list = ((ListInstitution) abstractSection).getListInstitution();
                         writeToCollection(dos, list, institution -> {
                             dos.writeUTF(institution.getHomePage().getName());
-                            dos.writeUTF(institution.getHomePage().getUrl());
+                            String url = institution.getHomePage().getUrl();
+                            dos.writeUTF(url == null ? "" : url);
                             writeToCollection(dos, institution.getPlaces(), place -> {
                                 writeLocalDate(dos, place.getStartDate());
                                 writeLocalDate(dos, place.getEndDate());
                                 dos.writeUTF(place.getTitle());
-                                dos.writeUTF(place.getDescription());
+                                String description = place.getDescription();
+                                dos.writeUTF(description == null ? "" : description);
                             });
                         });
                         break;
@@ -73,13 +75,9 @@ public class DataStreamStrategy implements SerializationStrategy {
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
+            readElements(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
 
-            size = dis.readInt();
-            for (int i = 0; i < size; i++) {
+            readElements(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case PERSONAL:
@@ -101,8 +99,15 @@ public class DataStreamStrategy implements SerializationStrategy {
                     default:
                         throw new IllegalStateException();
                 }
-            }
+            });
             return resume;
+        }
+    }
+
+    private void readElements(DataInputStream dis, VoidReader reader) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            reader.read();
         }
     }
 
@@ -129,4 +134,8 @@ public class DataStreamStrategy implements SerializationStrategy {
         T read() throws IOException;
     }
 
+    @FunctionalInterface
+    interface VoidReader {
+        void read() throws IOException;
+    }
 }
