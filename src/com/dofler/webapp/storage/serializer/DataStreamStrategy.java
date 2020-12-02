@@ -10,16 +10,6 @@ import java.util.List;
 
 public class DataStreamStrategy implements SerializationStrategy {
 
-    @FunctionalInterface
-    interface WriterTypes<T> {
-        void write(T t) throws IOException;
-    }
-
-    @FunctionalInterface
-    interface ReaderTypes<T> {
-        T read() throws IOException;
-    }
-
     @Override
     public void doWrite(Resume r, OutputStream os) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(os)) {
@@ -66,7 +56,7 @@ public class DataStreamStrategy implements SerializationStrategy {
     }
 
     private <T> void writeToCollection(DataOutputStream dos, Collection<T> collection,
-                                       WriterTypes<T> writer) throws IOException {
+                                       Writer<T> writer) throws IOException {
         dos.writeInt(collection.size());
         for (T item : collection) {
             writer.write(item);
@@ -116,7 +106,7 @@ public class DataStreamStrategy implements SerializationStrategy {
         }
     }
 
-    private <T> List<T> readList(DataInputStream dis, ReaderTypes<T> reader) throws IOException {
+    private <T> List<T> readList(DataInputStream dis, Reader<T> reader) throws IOException {
         int size = dis.readInt();
         List<T> list = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
@@ -128,4 +118,15 @@ public class DataStreamStrategy implements SerializationStrategy {
     private LocalDate readLocalDate(DataInputStream dis) throws IOException {
         return LocalDate.of(dis.readInt(), dis.readInt(), dis.readInt());
     }
+
+    @FunctionalInterface
+    interface Writer<T> {
+        void write(T t) throws IOException;
+    }
+
+    @FunctionalInterface
+    interface Reader<T> {
+        T read() throws IOException;
+    }
+
 }
