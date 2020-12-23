@@ -10,7 +10,7 @@ public class MainStreamAPI {
 
     public static int minValue(int[] value) {
         return Arrays.stream(value).distinct().sorted()
-                .reduce(0, (x, y) -> (int) Math.pow(10, (int) (Math.log10(y) + 1)) * x + y);
+                .reduce(0, (x, y) -> 10 * x + y);
     }
 
     public static List<Integer> oddOrEven(List<Integer> integers) {
