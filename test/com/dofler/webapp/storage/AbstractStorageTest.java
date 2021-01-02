@@ -1,6 +1,6 @@
 package com.dofler.webapp.storage;
 
-import com.dofler.webapp.ResumeTestData;
+import com.dofler.webapp.Config;
 import com.dofler.webapp.exception.ExistStorageException;
 import com.dofler.webapp.exception.NotExistStorageException;
 import com.dofler.webapp.model.Resume;
@@ -10,28 +10,34 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
 
 public abstract class AbstractStorageTest {
-    static final File STORAGE_DIR = new File("C:\\Users\\ilya\\basejava\\storage");
+    static final File STORAGE_DIR = Config.getInstance().getStorageDir();
 
     final Storage storage;
 
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
 
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
     private static final Resume RESUME_3;
 
     static {
+        /*
         RESUME_1 = ResumeTestData.createTestResume(UUID_1, "name1");
         RESUME_2 = ResumeTestData.createTestResume(UUID_2, "name2");
         RESUME_3 = ResumeTestData.createTestResume(UUID_3, "name3");
+        */
+        RESUME_1 = new Resume(UUID_1, "name1");
+        RESUME_2 = new Resume(UUID_2, "name2");
+        RESUME_3 = new Resume(UUID_3, "name3");
     }
 
     AbstractStorageTest(Storage storage) {
@@ -59,7 +65,8 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume testResume = ResumeTestData.createTestResume(UUID_2, "name2");
+        //Resume testResume = ResumeTestData.createTestResume(UUID_2, "name2");
+        Resume testResume = new Resume(UUID_2, "name2");
         storage.update(testResume);
         assertEquals(testResume, storage.get(UUID_2));
     }
@@ -71,9 +78,10 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        final Resume testResume = ResumeTestData.createTestResume(UUID_4, "name4");
+       // final Resume testResume = ResumeTestData.createTestResume(UUID_4, "name4");
+        Resume testResume = new Resume(UUID_4, "name4");
         storage.save(testResume);
-        assertSize(4);
+            assertSize(4);
         assertGet(testResume);
     }
 
