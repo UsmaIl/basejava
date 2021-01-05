@@ -1,4 +1,4 @@
-package com.dofler.webapp;
+package com.dofler.webapp.config;
 
 import com.dofler.webapp.storage.SQLStorage;
 import com.dofler.webapp.storage.Storage;

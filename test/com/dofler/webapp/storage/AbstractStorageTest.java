@@ -1,6 +1,6 @@
 package com.dofler.webapp.storage;
 
-import com.dofler.webapp.Config;
+import com.dofler.webapp.config.Config;
 import com.dofler.webapp.exception.ExistStorageException;
 import com.dofler.webapp.exception.NotExistStorageException;
 import com.dofler.webapp.model.Resume;
