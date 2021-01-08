@@ -1,7 +1,7 @@
 package com.dofler.webapp.sql;
 
-import com.dofler.webapp.exception.ExistStorageException;
 import com.dofler.webapp.exception.StorageException;
+import com.dofler.webapp.util.ExceptionUtil;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -22,9 +22,22 @@ public class SqlHelper {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             return executor.execute(preparedStatement);
         } catch (SQLException e) {
-            if ("23505".equals(e.getSQLState())) {
-                throw new ExistStorageException(null);
+            throw ExceptionUtil.convertException(e);
+        }
+    }
+
+    public <T> T performTransaction(SqlTransaction<T> executor) {
+        try (Connection conn = connectionPool.getConnection()) {
+            try {
+                conn.setAutoCommit(false);
+                T result = executor.execute(conn);
+                conn.commit();
+                return result;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw ExceptionUtil.convertException(e);
             }
+        } catch (SQLException e) {
             throw new StorageException(e);
         }
     }
@@ -32,5 +45,10 @@ public class SqlHelper {
     @FunctionalInterface
     public interface SQLExecutor<T> {
         T execute(PreparedStatement t) throws SQLException;
+    }
+
+    @FunctionalInterface
+    public interface SqlTransaction<T> {
+        T execute(Connection conn) throws SQLException;
     }
 }
