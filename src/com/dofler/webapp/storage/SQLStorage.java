@@ -88,8 +88,8 @@ public class SQLStorage implements Storage {
             }
             Resume r = new Resume(uuid, resultSet.getString("full_name"));
             do {
-                String value = resultSet.getString("type");
-                ContactType type = ContactType.valueOf(value);
+                String value = resultSet.getString("value");
+                ContactType type = ContactType.valueOf(resultSet.getString("type"));
                 r.addContact(type, value);
             } while (resultSet.next());
 
@@ -135,7 +135,7 @@ public class SQLStorage implements Storage {
             for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, entry.getKey().name());
-                ps.setString(2, entry.getValue());
+                ps.setString(3, entry.getValue());
                 ps.addBatch();
             }
             ps.executeBatch();
