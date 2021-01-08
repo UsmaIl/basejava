@@ -3,6 +3,7 @@ package com.dofler.webapp.storage;
 import com.dofler.webapp.config.Config;
 import com.dofler.webapp.exception.ExistStorageException;
 import com.dofler.webapp.exception.NotExistStorageException;
+import com.dofler.webapp.model.ContactType;
 import com.dofler.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,7 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
     private static final Resume RESUME_3;
+    private static final Resume RESUME_4;
 
     static {
         /*
@@ -38,6 +40,28 @@ public abstract class AbstractStorageTest {
         RESUME_1 = new Resume(UUID_1, "name1");
         RESUME_2 = new Resume(UUID_2, "name2");
         RESUME_3 = new Resume(UUID_3, "name3");
+        RESUME_4 = new Resume(UUID_4, "name4");
+
+        RESUME_1.addContact(ContactType.NAME, "Григорий Кислин");
+        RESUME_1.addContact(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
+        RESUME_1.addContact(ContactType.MESSENGER, "Skype: grigory.kislin");
+        RESUME_1.addContact(ContactType.MAIL, "gkislin@yandex.ru");
+
+        RESUME_2.addContact(ContactType.NAME, "Иван Иванов");
+        RESUME_2.addContact(ContactType.PHONE_NUMBER, "401-555");
+        RESUME_2.addContact(ContactType.MESSENGER, "Skype: ivanov87");
+        RESUME_2.addContact(ContactType.MAIL, "IvanIvanovich@yandex.ru");
+
+        RESUME_3.addContact(ContactType.NAME, "Женя Дуров");
+        RESUME_3.addContact(ContactType.PHONE_NUMBER, "222-333");
+        RESUME_3.addContact(ContactType.MESSENGER, "Skype: hametisy");
+        RESUME_3.addContact(ContactType.MAIL, "hametisy@gmail.com");
+
+        RESUME_4.addContact(ContactType.NAME, "Илья Усьманки");
+        RESUME_4.addContact(ContactType.PHONE_NUMBER, "+7(925) 725-4427");
+        RESUME_4.addContact(ContactType.MESSENGER, "Discord: Izenkyt");
+        RESUME_4.addContact(ContactType.MAIL, "dofler@mail.ru");
+
     }
 
     AbstractStorageTest(Storage storage) {
@@ -65,10 +89,12 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        //Resume testResume = ResumeTestData.createTestResume(UUID_2, "name2");
-        Resume testResume = new Resume(UUID_2, "name2");
-        storage.update(testResume);
-        assertEquals(testResume, storage.get(UUID_2));
+        Resume testResume = new Resume(UUID_1, "Test Name");
+        testResume.addContact(ContactType.PHONE_NUMBER, "+7(935) 142-4425");
+        testResume.addContact(ContactType.MAIL, "lol@mail.ru");
+        testResume.addContact(ContactType.MESSENGER, "Discord: TestName");
+        storage.update(RESUME_2);
+        assertEquals(RESUME_2, storage.get(UUID_2));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -78,11 +104,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-       // final Resume testResume = ResumeTestData.createTestResume(UUID_4, "name4");
-        Resume testResume = new Resume(UUID_4, "name4");
-        storage.save(testResume);
-            assertSize(4);
-        assertGet(testResume);
+        storage.save(RESUME_4);
+        assertSize(4);
+        assertGet(RESUME_4);
     }
 
     @Test(expected = ExistStorageException.class)
@@ -99,7 +123,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void deleteNotExist() {
-        storage.delete(UUID_4);
+        storage.delete("dofler");
     }
 
     @Test
@@ -118,7 +142,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() {
-        storage.get(UUID_4);
+        storage.get("dofler");
     }
 
     private void assertGet(Resume r) {
