@@ -120,7 +120,7 @@ public class ResumeTestData {
 
         resume.setContacts(contact);
 
-        Map<SectionType, AbstractSection> positions = new LinkedHashMap<>();
+       /* Map<SectionType, AbstractSection> positions = new LinkedHashMap<>();
         positions.put(SectionType.OBJECTIVE, new TextSection("Работяга"));
         positions.put(SectionType.PERSONAL, new TextSection("Трудолюбивый"));
         positions.put(SectionType.ACHIEVEMENT, new ListSection(new ArrayList<String>() {{
@@ -146,7 +146,7 @@ public class ResumeTestData {
                     add(new Place(1980, 12, "Лучший вуз планеты", ""));
                 }}));
         positions.put(SectionType.EDUCATION, new ListInstitution(institutions));
-        resume.setSections(positions);
+        resume.setSections(positions);*/
         return resume;
     }
 }
