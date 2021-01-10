@@ -5,6 +5,8 @@ import com.dofler.webapp.exception.ExistStorageException;
 import com.dofler.webapp.exception.NotExistStorageException;
 import com.dofler.webapp.model.ContactType;
 import com.dofler.webapp.model.Resume;
+import com.dofler.webapp.ResumeTestData;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +16,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-
 
 public abstract class AbstractStorageTest {
     static final File STORAGE_DIR = Config.getInstance().getStorageDir();
@@ -32,36 +33,10 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-        /*
         RESUME_1 = ResumeTestData.createTestResume(UUID_1, "name1");
         RESUME_2 = ResumeTestData.createTestResume(UUID_2, "name2");
         RESUME_3 = ResumeTestData.createTestResume(UUID_3, "name3");
-        */
-        RESUME_1 = new Resume(UUID_1, "name1");
-        RESUME_2 = new Resume(UUID_2, "name2");
-        RESUME_3 = new Resume(UUID_3, "name3");
-        RESUME_4 = new Resume(UUID_4, "name4");
-
-        RESUME_1.addContact(ContactType.NAME, "Григорий Кислин");
-        RESUME_1.addContact(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
-        RESUME_1.addContact(ContactType.MESSENGER, "Skype: grigory.kislin");
-        RESUME_1.addContact(ContactType.MAIL, "gkislin@yandex.ru");
-
-        RESUME_2.addContact(ContactType.NAME, "Иван Иванов");
-        RESUME_2.addContact(ContactType.PHONE_NUMBER, "401-555");
-        RESUME_2.addContact(ContactType.MESSENGER, "Skype: ivanov87");
-        RESUME_2.addContact(ContactType.MAIL, "IvanIvanovich@yandex.ru");
-
-        RESUME_3.addContact(ContactType.NAME, "Женя Дуров");
-        RESUME_3.addContact(ContactType.PHONE_NUMBER, "222-333");
-        RESUME_3.addContact(ContactType.MESSENGER, "Skype: hametisy");
-        RESUME_3.addContact(ContactType.MAIL, "hametisy@gmail.com");
-
-        RESUME_4.addContact(ContactType.NAME, "Илья Усьманки");
-        RESUME_4.addContact(ContactType.PHONE_NUMBER, "+7(925) 725-4427");
-        RESUME_4.addContact(ContactType.MESSENGER, "Discord: Izenkyt");
-        RESUME_4.addContact(ContactType.MAIL, "dofler@mail.ru");
-
+        RESUME_4 = ResumeTestData.createTestResume(UUID_4, "name4");
     }
 
     AbstractStorageTest(Storage storage) {
@@ -93,8 +68,8 @@ public abstract class AbstractStorageTest {
         testResume.addContact(ContactType.PHONE_NUMBER, "+7(935) 142-4425");
         testResume.addContact(ContactType.MAIL, "lol@mail.ru");
         testResume.addContact(ContactType.MESSENGER, "Discord: TestName");
-        storage.update(RESUME_2);
-        assertEquals(RESUME_2, storage.get(UUID_2));
+        storage.update(testResume);
+        assertEquals(testResume, storage.get(UUID_1));
     }
 
     @Test(expected = NotExistStorageException.class)
