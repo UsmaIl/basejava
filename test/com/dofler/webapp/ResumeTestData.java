@@ -120,7 +120,7 @@ public class ResumeTestData {
 
         resume.setContacts(contact);
 
-       /* Map<SectionType, AbstractSection> positions = new LinkedHashMap<>();
+        Map<SectionType, AbstractSection> positions = new LinkedHashMap<>();
         positions.put(SectionType.OBJECTIVE, new TextSection("Работяга"));
         positions.put(SectionType.PERSONAL, new TextSection("Трудолюбивый"));
         positions.put(SectionType.ACHIEVEMENT, new ListSection(new ArrayList<String>() {{
@@ -129,7 +129,8 @@ public class ResumeTestData {
         positions.put(SectionType.QUALIFICATIONS, new ListSection(new ArrayList<String>() {{
             add("Java SE");
         }}));
-        List<Institution> institutions = new ArrayList<>();
+        resume.setSections(positions);
+        /*List<Institution> institutions = new ArrayList<>();
         institutions.add(new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
                 new ArrayList<Place>() {{
                     add((new Place(1985, 5, "Это просто работа", "Обычный работага")));
