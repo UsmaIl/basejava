@@ -1,0 +1,24 @@
+table {
+    border: 1px solid #69c;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+caption {
+    background: #2E6E9E;
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+th {
+    font-weight: normal;
+    color: #039;
+    border-bottom: 1px dashed #69c;
+    padding: 12px 17px;
+}
+
+td {
+    color: #669;
+    padding: 7px 17px;
+}
