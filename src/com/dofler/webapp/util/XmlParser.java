@@ -34,26 +34,12 @@ public class XmlParser {
         }
     }
 
-
     public void marshall(Object instance, Writer writer) {
         try {
             marshaller.marshal(instance, writer);
         } catch (JAXBException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public <T> T unmarshall(String section) throws JAXBException {
-        return (T) unmarshaller.unmarshal(marshaller.getNode(section));
-    }
-
-    public String marshall(Object instance) {
-        try {
-            marshaller.marshal(instance, sw);
-        } catch (JAXBException e) {
-            throw new IllegalStateException(e);
-        }
-        return sw.toString();
     }
 
     public <T> T unmarshall(Reader reader) {
@@ -63,6 +49,4 @@ public class XmlParser {
             throw new IllegalStateException(e);
         }
     }
-
-
 }
