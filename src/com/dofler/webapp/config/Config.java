@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-    private static final File PROPS = new File("config\\resumes.properties");
+    private static final File PROPS = new File( "C:\\Users\\ilya\\basejava\\config\\resumes.properties");
     private static final Config INSTANCE = new Config();
 
     private final File storageDir;
@@ -24,6 +24,7 @@ public class Config {
         try (InputStream is = new FileInputStream(PROPS)) {
             Properties props = new Properties();
             props.load(is);
+            System.out.println(PROPS);
             storageDir = new File(props.getProperty("storage.dir"));
             storage = new SQLStorage(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password"));
         } catch (IOException e) {
