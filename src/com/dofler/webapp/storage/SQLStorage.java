@@ -1,24 +1,15 @@
 package com.dofler.webapp.storage;
 
 import com.dofler.webapp.exception.NotExistStorageException;
-import com.dofler.webapp.exception.StorageException;
-import com.dofler.webapp.model.AbstractSection;
-import com.dofler.webapp.model.ContactType;
-import com.dofler.webapp.model.Resume;
-import com.dofler.webapp.model.SectionType;
+import com.dofler.webapp.model.*;
 import com.dofler.webapp.sql.SqlHelper;
-import com.dofler.webapp.util.XmlParser;
 import org.postgresql.ds.PGSimpleDataSource;
 
-import javax.xml.bind.JAXBException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SQLStorage implements Storage {
     //public final ConnectionFactory connectionFactory;
@@ -115,32 +106,42 @@ public class SQLStorage implements Storage {
                 while (rs.next()) {
                     addSection(rs, r);
                 }
-            } catch (JAXBException e) {
-                throw new StorageException(e);
             }
+
             return r;
         });
     }
 
     @Override
     public List<Resume> getAllSorted() {
-        return source.perform("" +
-                "SELECT * " +
-                "FROM resume r " +
-                "LEFT JOIN contact c ON r.uuid = c.resume_uuid " +
-                "ORDER BY full_name, uuid", ps -> {
-            ResultSet resultSet = ps.executeQuery();
-            Map<String, Resume> map = new LinkedHashMap<>();
-            while (resultSet.next()) {
-                String uuid = resultSet.getString("uuid");
-                Resume resume = map.get(uuid);
-                if (resume == null) {
-                    resume = new Resume(uuid, resultSet.getString("full_name"));
-                    map.put(uuid, resume);
+        return source.performTransaction(conn -> {
+            Map<String, Resume> resumes = new LinkedHashMap<>();
+
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY full_name, uuid")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String uuid = rs.getString("uuid");
+                    resumes.put(uuid, new Resume(uuid, rs.getString("full_name")));
                 }
-                addContact(resultSet, resume);
             }
-            return new ArrayList<>(map.values());
+
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    Resume r = resumes.get(rs.getString("resume_uuid"));
+                    addContact(rs, r);
+                }
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    Resume r = resumes.get(rs.getString("resume_uuid"));
+                    addSection(rs, r);
+                }
+            }
+
+            return new ArrayList<>(resumes.values());
         });
     }
 
@@ -160,12 +161,15 @@ public class SQLStorage implements Storage {
         }
     }
 
-    private void addSection(ResultSet rs, Resume r) throws SQLException, JAXBException {
-        String section = rs.getString("value");
-        if (section != null) {
+    private void addSection(ResultSet rs, Resume r) throws SQLException {
+        String value = rs.getString("value");
+        if (value != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            XmlParser xmlParser = new XmlParser(AbstractSection.class);
-            r.addSection(type, xmlParser.unmarshall(section));
+            if ((type == SectionType.OBJECTIVE || type == SectionType.PERSONAL)) {
+                r.addSection(type, new TextSection(value));
+            } else if ((type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS)) {
+                r.addSection(type, new ListSection(Arrays.asList(value.split("\n"))));
+            }
         }
     }
 
@@ -186,8 +190,13 @@ public class SQLStorage implements Storage {
             for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, entry.getKey().name());
-                XmlParser xmlParser = new XmlParser(AbstractSection.class);
-                ps.setString(3, xmlParser.marshall(entry.getValue()));
+                AbstractSection value = entry.getValue();
+                String strValue = String.valueOf(value);
+                if (value instanceof ListSection) {
+                    ps.setString(3, String.join("\n", strValue.substring(1, strValue.length() - 1)));
+                } else if (value instanceof TextSection) {
+                    ps.setString(3, String.join("\n", strValue));
+                }
                 ps.addBatch();
             }
             ps.executeBatch();
@@ -206,6 +215,6 @@ public class SQLStorage implements Storage {
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, uuid);
             ps.execute();
-        };
+        }
     }
 }
