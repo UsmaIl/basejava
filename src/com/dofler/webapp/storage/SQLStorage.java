@@ -3,6 +3,7 @@ package com.dofler.webapp.storage;
 import com.dofler.webapp.exception.NotExistStorageException;
 import com.dofler.webapp.model.*;
 import com.dofler.webapp.sql.SqlHelper;
+import com.dofler.webapp.util.JsonParser;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import java.sql.Connection;
@@ -41,10 +42,8 @@ public class SQLStorage implements Storage {
                 }
             }
 
-            if (!resume.getContacts().equals(get(resume.getUuid()).getContacts())) {
-                deleteContacts(conn, uuid);
-                insertContacts(resume, conn);
-            }
+            deleteContacts(conn, uuid);
+            insertContacts(resume, conn);
 
             if (!resume.getSections().equals(get(resume.getUuid()).getSections())) {
                 deleteSections(conn, uuid);
@@ -165,11 +164,7 @@ public class SQLStorage implements Storage {
         String value = rs.getString("value");
         if (value != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            if ((type == SectionType.OBJECTIVE || type == SectionType.PERSONAL)) {
-                r.addSection(type, new TextSection(value));
-            } else if ((type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS)) {
-                r.addSection(type, new ListSection(Arrays.asList(value.split("\n"))));
-            }
+            r.addSection(type, JsonParser.read(value, AbstractSection.class));
         }
     }
 
@@ -190,13 +185,7 @@ public class SQLStorage implements Storage {
             for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
                 ps.setString(1, resume.getUuid());
                 ps.setString(2, entry.getKey().name());
-                AbstractSection value = entry.getValue();
-                String strValue = String.valueOf(value);
-                if (value instanceof ListSection) {
-                    ps.setString(3, String.join("\n", strValue.substring(1, strValue.length() - 1)));
-                } else if (value instanceof TextSection) {
-                    ps.setString(3, String.join("\n", strValue));
-                }
+                ps.setString(3, JsonParser.write(entry.getValue(), AbstractSection.class));
                 ps.addBatch();
             }
             ps.executeBatch();

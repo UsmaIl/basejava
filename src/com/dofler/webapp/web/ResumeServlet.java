@@ -1,10 +1,8 @@
 package com.dofler.webapp.web;
 
 import com.dofler.webapp.config.Config;
-import com.dofler.webapp.model.AbstractSection;
 import com.dofler.webapp.model.ContactType;
 import com.dofler.webapp.model.Resume;
-import com.dofler.webapp.model.SectionType;
 import com.dofler.webapp.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -13,9 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.List;
-import java.util.Map;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -29,16 +25,51 @@ public class ResumeServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        String uuid = request.getParameter("uuid");
+        String fullName = request.getParameter("fullName");
+        Resume r = storage.get(uuid);
+        r.setFullName(fullName);
+        for (ContactType type : ContactType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                r.addContact(type, value);
+            } else {
+                r.getContacts().remove(type);
+            }
+        }
+        storage.update(r);
+        response.sendRedirect("resume");
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html; charset=UTF-8");
-        Writer writer = response.getWriter();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String uuid = request.getParameter("uuid");
+        String action = request.getParameter("action");
+        if (action == null) {
+            request.setAttribute("resumes", storage.getAllSorted());
+            request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
+            return;
+        }
+        Resume r;
+        switch (action) {
+            case "delete":
+                storage.delete(uuid);
+                response.sendRedirect("resume");
+                return;
+            case "view":
+            case "edit":
+                r = storage.get(uuid);
+                break;
+            default:
+                throw new IllegalArgumentException("Action " + action + " is illegal");
+        }
+        request.setAttribute("resume", r);
+        request.getRequestDispatcher(("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp"))
+                .forward(request, response);
+
+        /*Writer writer = response.getWriter();
         writer.write("<html>\n" +
                 "   <head>\n" +
                 "       <meta charset=UTF-8\">\n" +
@@ -93,6 +124,6 @@ public class ResumeServlet extends HttpServlet {
         writer.write("          </table>\n" +
                 "       </section>\n" +
                 "   </body>\n" +
-                "</html>\n");
+                "</html>\n");*/
     }
 }

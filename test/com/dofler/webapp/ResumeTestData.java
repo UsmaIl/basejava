@@ -10,7 +10,6 @@ import java.util.Map;
 public class ResumeTestData {
     public static void main(String[] args) {
         LinkedHashMap<ContactType, String> myContact = new LinkedHashMap<>();
-        myContact.put(ContactType.NAME, "Григорий Кислин");
         myContact.put(ContactType.PHONE_NUMBER, "+7(921) 855-0482");
         myContact.put(ContactType.MESSENGER, "Skype: grigory.kislin");
         myContact.put(ContactType.MAIL, "gkislin@yandex.ru");
@@ -109,7 +108,6 @@ public class ResumeTestData {
         Resume resume = new Resume(uuid, fullName);
 
         Map<ContactType, String> contact = new LinkedHashMap<>();
-        contact.put(ContactType.NAME, "Иван Иванов");
         contact.put(ContactType.PHONE_NUMBER, "+0(000) 000-0000");
         contact.put(ContactType.MESSENGER, "Skype: ivan.ivanov");
         contact.put(ContactType.MAIL, "ivanov@mail.ru");
@@ -130,7 +128,7 @@ public class ResumeTestData {
             add("Java SE");
         }}));
         resume.setSections(positions);
-        /*List<Institution> institutions = new ArrayList<>();
+        List<Institution> institutions = new ArrayList<>();
         institutions.add(new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
                 new ArrayList<Place>() {{
                     add((new Place(1985, 5, "Это просто работа", "Обычный работага")));
@@ -147,7 +145,7 @@ public class ResumeTestData {
                     add(new Place(1980, 12, "Лучший вуз планеты", ""));
                 }}));
         positions.put(SectionType.EDUCATION, new ListInstitution(institutions));
-        resume.setSections(positions);*/
+        resume.setSections(positions);
         return resume;
     }
 }
