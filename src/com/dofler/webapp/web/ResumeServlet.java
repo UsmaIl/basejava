@@ -1,9 +1,10 @@
 package com.dofler.webapp.web;
 
 import com.dofler.webapp.config.Config;
-import com.dofler.webapp.model.ContactType;
-import com.dofler.webapp.model.Resume;
+import com.dofler.webapp.model.*;
 import com.dofler.webapp.storage.Storage;
+import com.dofler.webapp.util.DateUtil;
+import com.dofler.webapp.util.HtmlUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,17 +12,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
-    private List<Resume> resumes;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         storage = Config.getInstance().getStorage();
-        resumes = storage.getAllSorted();
     }
 
     @Override
@@ -32,11 +33,52 @@ public class ResumeServlet extends HttpServlet {
         Resume r = storage.get(uuid);
         r.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
-            String value = request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
-                r.addContact(type, value);
-            } else {
+            String typeName = request.getParameter(type.name());
+            if (HtmlUtil.isEmpty(typeName)) {
                 r.getContacts().remove(type);
+            } else {
+                r.addContact(type, typeName);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            String typeName = request.getParameter(type.name());
+            String[] typeNames = request.getParameterValues(type.name());
+            if (HtmlUtil.isEmpty(typeName) && typeNames.length < 2) {
+                r.getSections().remove(type);
+            } else {
+                switch (type) {
+                    case OBJECTIVE:
+                    case PERSONAL:
+                        r.addSection(type, new TextSection(typeName));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        r.addSection(type, new ListSection(Arrays.asList(typeName.split("\\n"))));
+                        break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        List<Institution> institutions = new ArrayList<>();
+                        String[] urls = request.getParameterValues(type.name() + "_url");
+                        for (int i = 0; i < typeNames.length; i++) {
+                            String name = typeNames[i];
+                            if (!HtmlUtil.isEmpty(name)) {
+                                List<Place> places = new ArrayList<>();
+                                String typeNameN = type.name() + i;
+                                String[] startDates = request.getParameterValues(typeNameN + "_startDate");
+                                String[] endDates = request.getParameterValues(typeNameN + "_endDate");
+                                String[] titles = request.getParameterValues(typeNameN + "_title");
+                                String[] descriptions = request.getParameterValues(typeNameN + "_description");
+                                for (int j = 0; j < titles.length; j++) {
+                                    if (!HtmlUtil.isEmpty(titles[j])) {
+                                        places.add(new Place(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), titles[j], descriptions[j]));
+                                    }
+                                }
+                                institutions.add(new Institution(new Link(name, urls[i]), places));
+                            }
+                        }
+                        r.addSection(type, new ListInstitution(institutions));
+                        break;
+                }
             }
         }
         storage.update(r);
@@ -61,6 +103,20 @@ public class ResumeServlet extends HttpServlet {
             case "view":
             case "edit":
                 r = storage.get(uuid);
+                for (SectionType type : new SectionType[]{SectionType.EXPERIENCE, SectionType.EDUCATION}) {
+                    ListInstitution institutions = (ListInstitution) r.getSection(type);
+                    List<Institution> emptyFirstInstitutions = new ArrayList<>();
+                    emptyFirstInstitutions.add(Institution.EMPTY);
+                    if (institutions != null) {
+                        for (Institution institution : institutions.getListInstitution()) {
+                            List<Place> emptyFirstPositions = new ArrayList<>();
+                            emptyFirstPositions.add(Place.EMPTY);
+                            emptyFirstPositions.addAll(institution.getPlaces());
+                            emptyFirstInstitutions.add(new Institution(institution.getHomePage(), emptyFirstPositions));
+                        }
+                    }
+                    r.addSection(type, new ListInstitution(emptyFirstInstitutions));
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Action " + action + " is illegal");
@@ -68,62 +124,5 @@ public class ResumeServlet extends HttpServlet {
         request.setAttribute("resume", r);
         request.getRequestDispatcher(("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp"))
                 .forward(request, response);
-
-        /*Writer writer = response.getWriter();
-        writer.write("<html>\n" +
-                "   <head>\n" +
-                "       <meta charset=UTF-8\">\n" +
-                "       <title>Список всех резюме</title>\n" +
-                "       <link rel=\"stylesheet\" href=\"css/style-table.css\">\n" +
-                "   </head>\n" +
-                "   <body>\n" +
-                "       <section>\n" +
-                "           <table>\n" +
-                "               <caption>Контакты</caption>\n" +
-                "               <tr>\n" +
-                "                   <th>Имя</th>\n" +
-                "                   <th>Тел.</th>\n" +
-                "                   <th>Мессенджер</th>\n" +
-                "                   <th>Почта</th>\n" +
-                "                   <th>Профиль LinkedIn</th>\n" +
-                "                   <th>Профиль GitHub</th>\n" +
-                "                   <th>Профиль Stackoverflow</th>\n" +
-                "                   <th>Домашняя страница</th>\n" +
-                "               </tr>\n");
-        for (Resume resume : resumes) {
-            writer.write("               <tr>\n");
-            for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
-                ContactType key = entry.getKey();
-                String value = entry.getValue();
-                if (key.ordinal() > 3) {
-                    writer.write("                   <td><a href=\"" + value + "\">" + key.getTitle() + "</a></td>\n");
-                } else {
-                    writer.write("                   <td>" + value + "</td>\n");
-                }
-            }
-        }
-        writer.write("              </tr>\n" +
-                "           </table>\n<br><br>\n" +
-                "           <table>\n" +
-                "               <caption>Секции</caption>\n" +
-                "               <tr>\n" +
-                "                   <th>Позиция</th>\n" +
-                "                   <th>Личные качества</th>\n" +
-                "                   <th>Достижения</th>\n" +
-                "                   <th>Квалификация</th>\n" +
-                "                   <th>Опыт работы</th>\n" +
-                "                   <th>Образование</th>\n" +
-                "               </tr>\n");
-        for (Resume resume : resumes) {
-            writer.write("               <tr>\n");
-            for (Map.Entry<SectionType, AbstractSection> entry : resume.getSections().entrySet()) {
-                writer.write("                   <td>" + entry.getValue() + "</td>\n");
-            }
-            writer.write("               </tr>\n");
-        }
-        writer.write("          </table>\n" +
-                "       </section>\n" +
-                "   </body>\n" +
-                "</html>\n");*/
     }
 }

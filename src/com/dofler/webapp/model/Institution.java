@@ -1,11 +1,14 @@
 package com.dofler.webapp.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 public class Institution extends AbstractSection {
     private Link homePage;
     private List<Place> places;
+
+    public static final Institution EMPTY = new Institution(new Link("", ""), Place.EMPTY);
 
     public Institution() {
     }
@@ -14,6 +17,11 @@ public class Institution extends AbstractSection {
         this.homePage = homePage;
         this.places = places;
     }
+
+    public Institution(Link homePage, Place ... places) {
+       this(homePage, Arrays.asList(places));
+    }
+
 
     public Link getHomePage() {
         return homePage;

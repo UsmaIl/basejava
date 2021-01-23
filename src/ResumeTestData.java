@@ -126,11 +126,11 @@ public class ResumeTestData {
             add("Java SE");
         }}));
         List<Institution> institutions = new ArrayList<>();
-        institutions.add(new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
+        institutions.add(new Institution(new Link("ТОПРАБОТА№1", "http://topwork1.ru/"),
                 new ArrayList<Place>() {{
                     add((new Place(1985, 5, "Это просто работа", "Обычный работага")));
                 }}));
-        institutions.add(new Institution(new Link("ТОПРАБОТА", "http://topwork.ru/"),
+        institutions.add(new Institution(new Link("ТОПРАБОТА№2", "http://topwork2.ru/"),
                 new ArrayList<Place>() {{
                     add(new Place(1990, 12, "Это лучшая работа в мире", "Бог"));
                 }}));

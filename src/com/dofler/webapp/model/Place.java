@@ -15,6 +15,8 @@ import java.util.Objects;
 public class Place implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public static final Place EMPTY = new Place();
+
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate startDate;
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
