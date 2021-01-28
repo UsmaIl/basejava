@@ -1,6 +1,7 @@
 package com.dofler.webapp.sql;
 
 import com.dofler.webapp.exception.StorageException;
+import com.dofler.webapp.storage.ConnectionFactory;
 import com.dofler.webapp.util.ExceptionUtil;
 
 import javax.sql.DataSource;
@@ -10,9 +11,9 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 public class SqlHelper {
-    private final DataSource connectionPool;
+    private final ConnectionFactory connectionPool;
 
-    public SqlHelper(DataSource connectionPool) {
+    public SqlHelper(ConnectionFactory connectionPool) {
         this.connectionPool = connectionPool;
     }
 

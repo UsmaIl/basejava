@@ -6,23 +6,23 @@ import com.dofler.webapp.sql.SqlHelper;
 import com.dofler.webapp.util.JsonParser;
 import org.postgresql.ds.PGSimpleDataSource;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class SQLStorage implements Storage {
-    //public final ConnectionFactory connectionFactory;
     public final SqlHelper source;
 
     public SQLStorage(String dbUrl, String dbUser, String dbPassword) {
-        //connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        /*PGSimpleDataSource dataSource = new PGSimpleDataSource();
         dataSource.setApplicationName(dbUrl);
         dataSource.setUser(dbUser);
-        dataSource.setPassword(dbPassword);
-        source = new SqlHelper(dataSource);
+        dataSource.setPassword(dbPassword);*/
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+        source = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
     }
 
     @Override
