@@ -21,7 +21,7 @@
             <th>Профиль GitHub</th>
             <th>Профиль Stackoverflow</th>
             <th>Домашняя страница</th>
-            <th></th>
+            <th><a href="resume?action=add"><img src="img/add.png" title="add" alt="Add"></a></th>
             <th></th>
         </tr>
         <jsp:useBean id="resumes" scope="request" type="java.util.List"/>
@@ -35,8 +35,8 @@
                     <td><%=contactEntry.getKey().toHtml(contactEntry.getValue())%></td>
 
                 </c:forEach>
-                <td><a href="resume?uuid=${resume.uuid}&action=delete"><img src="" alt="Delete"></a></td>
-                <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="" alt="Edit"></a></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=delete"><img src="img/delete.png" title="delete" alt="Delete"></a></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png" title="edit" alt="Edit"></a></td>
             </tr>
         </c:forEach>
     </table>

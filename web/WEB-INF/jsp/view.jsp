@@ -69,11 +69,9 @@
                             <jsp:useBean id="place" type="com.dofler.webapp.model.Place"/>
                             <tr>
                                 <td>
-                                    <c:if test="${!HtmlUtil.isEmpty(place.title)}">
-                                        <b>Период:&nbsp;</b><%=HtmlUtil.formatDates(place)%><br/>
-                                        <b>Название:&nbsp;</b>${place.title}<br/>
-                                        <b>Описание:&nbsp;</b>${place.description}<br/>
-                                    </c:if>
+                                    <b>Период:&nbsp;</b><%=HtmlUtil.formatDates(place)%><br/>
+                                    <b>Название:&nbsp;</b>${place.title}<br/>
+                                    <b>Описание:&nbsp;</b>${place.description}<br/>
                                 </td>
                             </tr>
                         </c:forEach>

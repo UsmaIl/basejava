@@ -1,5 +1,6 @@
-<%@ page import="com.dofler.webapp.util.DateUtil" %>
+<%@ page import="com.dofler.webapp.util.HtmlUtil" %>
 <%@ page import="com.dofler.webapp.model.*" %>
+<%@ page import="com.dofler.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -18,14 +19,14 @@
         <h2>Имя</h2>
         <ul class="names-ul">
             <li class="name-li">
-                <label for="full_name">ФИО:</label>
-                <input name="full_name" type="text" size=30 value="${resume.fullName}">
+                <label for="fullName">ФИО:</label>
+                <input name="fullName" type="text" value="${resume.fullName}">
             </li>
         </ul>
-        <h2>Контакты:</h2>
+        <h2>Контакты</h2>
         <ul class="contacts-ul">
             <c:forEach var="type" items="<%=ContactType.values()%>">
-                <c:set var="sectionName" value="${type.name().toLowerCase()}"/>
+                <c:set var="sectionName" value="${type.name()}"/>
                 <jsp:useBean id="sectionName" type="java.lang.String"/>
                 <li class="contact-li">
                     <label for="<%=sectionName%>">${type.title}:</label>
@@ -33,7 +34,7 @@
                 </li>
             </c:forEach>
         </ul>
-        <h2>О себе:</h2>
+        <h2>О себе</h2>
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <c:set var="section" value="${resume.getSection(type)}"/>
             <jsp:useBean id="section" type="com.dofler.webapp.model.AbstractSection"/>
@@ -60,34 +61,35 @@
                                varStatus="counter">
                         <ul class="institutions-ul">
                             <li class="institution-li">
-                                <label for="${type}_name}">Название учереждения:</label>
-                                <input type="text" name="${type}_name}" value="${institution.homePage.name}">
+                                <label for="${type}">Название учереждения:</label>
+                                <input type="text" name="${type}" value="${institution.homePage.name}">
                             </li>
                             <li class="institution-li">
-                                <label for="${type}_url">Сайт учереждения:</label>
-                                <input type="text" name="${type}_url" value="${institution.homePage.url}">
+                                <label for="${type}url">Сайт учереждения:</label>
+                                <input type="text" name="${type}url" value="${institution.homePage.url}">
                             </li>
                         </ul>
                         <ul class="places-ul">
                         <c:forEach var="place" items="${institution.places}">
                             <jsp:useBean id="place" type="com.dofler.webapp.model.Place"/>
                             <li class="place-li">
-                                <label for="${type}${counter.index}_startDate">Начальная дата:</label>
-                                <input type="date" name="${type}${counter.index}_startDate">
+                                <label for="${type}${counter.index}startDate">Начальная дата:</label>
+                                <input type="date" name="${type}${counter.index}startDate"
+                                       value="<%=DateUtil.format(place.getStartDate())%>">
                             </li>
                             <li class="place-li">
-                                <label for="${type}${counter.index}_endDate">Конечная дата:</label>
-                                <input type="date" name="${type}${counter.index}_endDate"
-                                       value="<%=place.getEndDate()%>" placeholder="MM/yyyy">
+                                <label for="${type}${counter.index}endDate">Конечная дата:</label>
+                                <input type="date" name="${type}${counter.index}endDate"
+                                       value="<%=DateUtil.format(place.getEndDate())%>">
                             </li>
                             <li class="place-li">
-                                <label for="${type}${counter.index}_title">Должность:</label>
-                                <input type="text" name=${type}${counter.index}_title"
+                                <label for="${type}${counter.index}title">Должность:</label>
+                                <input type="text" name="${type}${counter.index}title"
                                        value="${place.title}">
                             </li>
                             <li class="place-li">
-                                <label for="${type}${counter.index}_description">Описание:</label>
-                                <textarea name="${type}${counter.index}_description" rows=5>${place.description}</textarea>
+                                <label for="${type}${counter.index}description">Описание:</label>
+                                <textarea name="${type}${counter.index}description" rows=5>${place.description}</textarea>
                             </li>
                         </ul>
                         </c:forEach>
