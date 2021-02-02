@@ -25,9 +25,6 @@ public class Place implements Serializable {
 
     private String description;
 
-    public Place() {
-    }
-
     public Place(LocalDate startDate, LocalDate endDate, String title, String description) {
         Objects.requireNonNull(startDate, "startDate must not be null");
         Objects.requireNonNull(endDate, "endDate must not be null");
@@ -38,12 +35,15 @@ public class Place implements Serializable {
         this.description = description;
     }
 
+    public Place(int startYear, int startMonth, int endYear, int endMonth, String title, String description) {
+        this(DateUtil.of(startYear, Month.of(startMonth)), DateUtil.of(endYear, Month.of(endMonth)), title, description);
+    }
+
     public Place(int startYear, int startMonth, String title, String description) {
         this(DateUtil.of(startYear, Month.of(startMonth)), DateUtil.NOW, title, description);
     }
 
-    public Place(int startYear, int startMonth, int endYear, int endMonth, String title, String description) {
-        this(DateUtil.of(startYear, Month.of(startMonth)), DateUtil.of(endYear, Month.of(endMonth)), title, description);
+    public Place() {
     }
 
     @Override

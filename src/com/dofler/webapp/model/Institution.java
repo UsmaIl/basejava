@@ -8,9 +8,10 @@ public class Institution extends AbstractSection {
     private Link homePage;
     private List<Place> places;
 
-    public static final Institution EMPTY = new Institution(new Link("", ""), Place.EMPTY);
+    public static final Institution EMPTY = new Institution("", "", Place.EMPTY);
 
-    public Institution() {
+    public Institution(String name, String url, Place ... places) {
+        this(new Link(name, url), Arrays.asList(places));
     }
 
     public Institution(Link homePage, List<Place> places) {
@@ -18,10 +19,8 @@ public class Institution extends AbstractSection {
         this.places = places;
     }
 
-    public Institution(Link homePage, Place ... places) {
-       this(homePage, Arrays.asList(places));
+    public Institution() {
     }
-
 
     public Link getHomePage() {
         return homePage;

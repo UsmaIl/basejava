@@ -3,13 +3,17 @@ package com.dofler.webapp.model;
 import java.util.Objects;
 
 public class TextSection extends AbstractSection {
+
+    public static final TextSection EMPTY = new TextSection("");
+
     private String content;
 
-    public TextSection() {
+    public TextSection(String content) {
+        Objects.requireNonNull(content, "content must not be null");
+        this.content = content;
     }
 
-    public TextSection(String content) {
-        this.content = content;
+    public TextSection() {
     }
 
     public String getContent() {

@@ -1,11 +1,13 @@
 package com.dofler.webapp.model;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class ListSection extends AbstractSection {
 
+    public static final ListSection EMPTY = new ListSection(Collections.emptyList());
     private List<String> details;
 
     public ListSection() {
