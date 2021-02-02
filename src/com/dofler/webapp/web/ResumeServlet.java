@@ -90,12 +90,13 @@ public class ResumeServlet extends HttpServlet {
                 }
             }
         }
-        if (emptyUuid) {
-            storage.save(r);
-        } else {
-            storage.update(r);
+        if (!(r.toString().equals("\n"))) {
+            if (emptyUuid) {
+                storage.save(r);
+            } else {
+                storage.update(r);
+            }
         }
-
         response.sendRedirect("resume");
     }
 
