@@ -89,7 +89,7 @@
                             </li>
                             <li class="place-li">
                                 <label for="${type}${counter.index}description">Описание:</label>
-                                <textarea name="${type}${counter.index}description" rows=5>${place.description}</textarea>
+                                <textarea name="${type}${counter.index}description" cols="29" rows=5>${place.description}</textarea>
                             </li>
                         </ul>
                         </c:forEach>
@@ -99,7 +99,7 @@
         </c:forEach>
         <ul class="buttons-ul">
             <li class="button-li">
-                <button onclick="window.history.back()">Отменить</button>
+                <button type="reset" onclick="window.history.back()">Отменить</button>
                 <button type="submit">Сохранить</button>
             </li>
         </ul>

@@ -29,7 +29,7 @@ public class ResumeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
-        String fullName = request.getParameter("fullName");
+        String fullName = request.getParameter("fullName").trim();
 
         final boolean emptyUuid = (uuid == null || uuid.length() == 0);
         Resume r;
@@ -41,7 +41,7 @@ public class ResumeServlet extends HttpServlet {
         }
 
         for (ContactType type : ContactType.values()) {
-            String value = request.getParameter(type.name());
+            String value = request.getParameter(type.name()).trim();
             if (HtmlUtil.isEmpty(value)) {
                 r.getContacts().remove(type);
             } else {
@@ -50,7 +50,7 @@ public class ResumeServlet extends HttpServlet {
         }
 
         for (SectionType type : SectionType.values()) {
-            String value = request.getParameter(type.name());
+            String value = request.getParameter(type.name()).trim();
             String[] values = request.getParameterValues(type.name());
             if (HtmlUtil.isEmpty(value) && values.length < 2) {
                 r.getSections().remove(type);
@@ -62,14 +62,16 @@ public class ResumeServlet extends HttpServlet {
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        r.addSection(type, new ListSection(Arrays.asList(value.split("\\n"))));
+                        if (!HtmlUtil.isEmpty(value)) {
+                            r.addSection(type, new ListSection(Arrays.asList(value.split("\\n"))));
+                        }
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
                         List<Institution> institutions = new ArrayList<>();
                         String[] urls = request.getParameterValues(type.name() + "url");
                         for (int i = 0; i < values.length; i++) {
-                            String name = values[i];
+                            String name = values[i].trim();
                             if (!HtmlUtil.isEmpty(name)) {
                                 List<Place> places = new ArrayList<>();
                                 String valueN = type.name() + i;
@@ -79,10 +81,10 @@ public class ResumeServlet extends HttpServlet {
                                 String[] descriptions = request.getParameterValues(valueN + "description");
                                 for (int j = 0; j < titles.length; j++) {
                                     if (!HtmlUtil.isEmpty(titles[j])) {
-                                        places.add(new Place(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), titles[j], descriptions[j]));
+                                        places.add(new Place(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), titles[j].trim(), descriptions[j].trim()));
                                     }
                                 }
-                                institutions.add(new Institution(new Link(name, urls[i]), places));
+                                institutions.add(new Institution(new Link(name, urls[i].trim()), places));
                             }
                         }
                         r.addSection(type, new ListInstitution(institutions));
@@ -145,11 +147,12 @@ public class ResumeServlet extends HttpServlet {
                             if (institutions != null) {
                                 for (Institution institution : institutions.getListInstitution()) {
                                     List<Place> places = new ArrayList<>(institution.getPlaces());
+                                    places.add(Place.EMPTY);
+                                    places.addAll(institution.getPlaces());
                                     newInstitutions.add(new Institution(institution.getHomePage(), places));
                                 }
-                                newInstitutions.add(Institution.EMPTY);
-                                newInstitutions.add(new Institution("", "", Place.EMPTY));
                             }
+                            newInstitutions.add(Institution.EMPTY);
                             section = new ListInstitution(newInstitutions);
                             break;
                     }
