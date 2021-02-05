@@ -1,4 +1,3 @@
-<%@ page import="com.dofler.webapp.util.HtmlUtil" %>
 <%@ page import="com.dofler.webapp.model.*" %>
 <%@ page import="com.dofler.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" %>

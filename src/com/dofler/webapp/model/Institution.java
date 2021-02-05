@@ -14,6 +14,7 @@ public class Institution extends AbstractSection {
         this(new Link(name, url), Arrays.asList(places));
     }
 
+
     public Institution(Link homePage, List<Place> places) {
         this.homePage = homePage;
         this.places = places;
@@ -28,6 +29,10 @@ public class Institution extends AbstractSection {
 
     public List<Place> getPlaces() {
         return places;
+    }
+
+    public void setPlaces(List<Place> places) {
+        this.places = places;
     }
 
     @Override

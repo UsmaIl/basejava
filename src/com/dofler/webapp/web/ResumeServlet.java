@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -42,11 +43,7 @@ public class ResumeServlet extends HttpServlet {
 
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name()).trim();
-            if (HtmlUtil.isEmpty(value)) {
-                r.getContacts().remove(type);
-            } else {
-                r.addContact(type, value);
-            }
+            r.addContact(type, value);
         }
 
         for (SectionType type : SectionType.values()) {
@@ -58,13 +55,17 @@ public class ResumeServlet extends HttpServlet {
                 switch (type) {
                     case OBJECTIVE:
                     case PERSONAL:
-                        r.addSection(type, new TextSection(value));
+                        r.addSection(type, new TextSection(Arrays.stream(value.split("\\n"))
+                                .map(String::trim)
+                                .filter(str -> str.length() != 0)
+                                .collect(Collectors.joining(", "))));
                         break;
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
-                        if (!HtmlUtil.isEmpty(value)) {
-                            r.addSection(type, new ListSection(Arrays.asList(value.split("\\n"))));
-                        }
+                        r.addSection(type, new ListSection(Arrays.stream(value.split("\\n"))
+                                .filter(str -> str.trim().length() != 0)
+                                .collect(Collectors.toList())));
+
                         break;
                     case EDUCATION:
                     case EXPERIENCE:
@@ -81,7 +82,9 @@ public class ResumeServlet extends HttpServlet {
                                 String[] descriptions = request.getParameterValues(valueN + "description");
                                 for (int j = 0; j < titles.length; j++) {
                                     if (!HtmlUtil.isEmpty(titles[j])) {
-                                        places.add(new Place(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), titles[j].trim(), descriptions[j].trim()));
+                                        places.add(new Place(DateUtil.parse(startDates[j]),
+                                                             DateUtil.parse(endDates[j]),
+                                                titles[j].trim(), descriptions[j].trim()));
                                     }
                                 }
                                 institutions.add(new Institution(new Link(name, urls[i].trim()), places));
@@ -146,10 +149,11 @@ public class ResumeServlet extends HttpServlet {
                             List<Institution> newInstitutions = new ArrayList<>();
                             if (institutions != null) {
                                 for (Institution institution : institutions.getListInstitution()) {
-                                    List<Place> places = new ArrayList<>(institution.getPlaces());
-                                    places.add(Place.EMPTY);
-                                    places.addAll(institution.getPlaces());
-                                    newInstitutions.add(new Institution(institution.getHomePage(), places));
+                                    List<Place> places = institution.getPlaces();
+                                    List<Place> emptyPlaces = new ArrayList<>(places);
+                                    emptyPlaces.add(Place.EMPTY);
+                                    institution.setPlaces(emptyPlaces);
+                                    newInstitutions.add(institution);
                                 }
                             }
                             newInstitutions.add(Institution.EMPTY);

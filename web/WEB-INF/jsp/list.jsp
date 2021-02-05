@@ -33,7 +33,6 @@
                     <jsp:useBean id="contactEntry"
                                  type="java.util.Map.Entry<com.dofler.webapp.model.ContactType, java.lang.String>"/>
                     <td><%=contactEntry.getKey().toHtml(contactEntry.getValue())%></td>
-
                 </c:forEach>
                 <td><a href="resume?uuid=${resume.uuid}&action=delete"><img src="img/delete.png" title="delete" alt="Delete"></a></td>
                 <td><a href="resume?uuid=${resume.uuid}&action=edit"><img src="img/pencil.png" title="edit" alt="Edit"></a></td>
