@@ -13,5 +13,7 @@
   - **Установку (деплой) web-приложения:**
      - в контейнер сервлетов [Tomcat](https://ru.wikipedia.org/wiki/Apache_Tomcat)
      - в облачный сервис [Heroku](https://ru.wikipedia.org/wiki/Heroku)
+
 В данном приложении реализованы CRUD операции для резюме
+
 Проект задеплоин в облачный сервис [Heroku](https://resumesapp2021.herokuapp.com/resume)
